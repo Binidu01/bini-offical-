@@ -1,401 +1,316 @@
-# bini-official
+<div align="center">
+  <img src="https://skills.syvixor.com/api/icons?i=binijs" width="80" height="80" alt="Bini.js logo" />
 
-A **Bini.js** application — build full-stack React applications for **web, desktop, and mobile** using a single unified development experience.
+  <h1>Bini.js</h1>
 
-Powered by **Bini.js**, **Vite**, **Hono**, and **Tauri**.
+  <p><strong>React Framework for Cross-Platform</strong></p>
+
+  <p>One codebase. Six platforms. Zero boilerplate. Write React, ship everywhere.</p>
+
+  <p>
+    <a href="https://www.npmjs.com/package/create-bini-app"><img src="https://img.shields.io/npm/v/create-bini-app?color=00cfff&labelColor=040a16&label=create-bini-app" alt="create-bini-app" /></a>
+    <a href="https://www.npmjs.com/package/bini-router"><img src="https://img.shields.io/npm/v/bini-router?color=0077ff&labelColor=040a16&label=bini-router" alt="bini-router" /></a>
+    <a href="https://www.npmjs.com/package/bini-native"><img src="https://img.shields.io/npm/v/bini-native?color=34d399&labelColor=040a16&label=bini-native" alt="bini-native" /></a>
+    <a href="https://www.npmjs.com/package/bini-server"><img src="https://img.shields.io/npm/v/bini-server?color=00cfff&labelColor=040a16&label=bini-server" alt="bini-server" /></a>
+    <a href="https://www.npmjs.com/package/bini-overlay"><img src="https://img.shields.io/npm/v/bini-overlay?color=0077ff&labelColor=040a16&label=bini-overlay" alt="bini-overlay" /></a>
+    <a href="https://www.npmjs.com/package/bini-export"><img src="https://img.shields.io/npm/v/bini-export?color=00cfff&labelColor=040a16&label=bini-export" alt="bini-export" /></a>
+    <a href="https://www.npmjs.com/package/bini-env"><img src="https://img.shields.io/npm/v/bini-env?color=0077ff&labelColor=040a16&label=bini-env" alt="bini-env" /></a>
+    <a href="https://github.com/Binidu01/bini-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-00cfff?labelColor=040a16" alt="MIT license" /></a>
+  </p>
+
+  <p>
+    <a href="https://bini.js.org">Website</a> ·
+    <a href="https://bini.js.org/docs">Docs</a> ·
+    <a href="https://github.com/Binidu01/bini-examples">Examples</a> ·
+    <a href="https://github.com/Binidu01/bini-cli/issues">Issues</a>
+  </p>
+</div>
 
 ---
 
-# Web
+## What is Bini.js?
 
-## Features
+Bini.js is a React framework for building modern applications that run natively across web, desktop, and mobile — all from a single codebase. It gives you file-based routing, [Hono](https://hono.dev)-powered API routes, per-route metadata, a zero-dependency production server, static export, native plugin wiring, and a polished dev experience all wired together and ready to deploy anywhere.
 
-- File-based routing, nested layouts, per-route metadata, and automatic code splitting powered by **bini-router**.
-- API routes powered by **Hono**:
-  - Plain function handlers
-  - Full Hono applications
-  - Located inside `src/app/api/`
-- API execution through:
-  - Vite development middleware
-  - bini-server in production
-  - Edge runtimes when deployed
-- Zero-dependency production server (**bini-server**) with:
-  - ETag support
-  - 304 responses
-  - Graceful shutdown
-  - Automatic port fallback
-- Static SPA export (**bini-export**):
-  - Pre-renders static routes
-  - Generates optimized `404.html`
-  - Compatible with static hosting platforms
-- Deploy anywhere:
-  - Netlify Edge Functions
-  - Vercel Edge Runtime
-  - Cloudflare Workers
-  - Node.js
-  - Deno
-- Development overlay with:
-  - Shiki-powered error highlighting
-  - Automatic import support
-  - GitHub Codespaces compatibility
+```bash
+src/app/
+  page.tsx           → /
+  about/
+    page.tsx         → /about
+  blog/
+    [slug]/
+      page.tsx       → /blog/:slug
+  api/
+    hello.ts         → GET /api/hello
+```
 
-## Commands
+No config files to wire up. No router to maintain. Drop a file, get a route.
 
-| Command | Description |
+---
+
+## Quick Start
+
+```bash
+npx create-bini-app@latest my-app
+cd my-app
+npm install
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) — an animated `ß` badge in the corner confirms the dev server is running.
+
+### Scaffold options
+
+```bash
+# TypeScript + Tailwind (recommended)
+npx create-bini-app@latest my-app --typescript --tailwind
+
+# JavaScript + CSS Modules
+npx create-bini-app@latest my-app --javascript --css-modules
+
+# Target specific platform
+npx create-bini-app@latest my-app --platform macos
+npx create-bini-app@latest my-app --platform android --app-name "My App" --nosign
+npx create-bini-app@latest my-app --platform windows
+```
+
+---
+
+## Platforms
+
+One codebase, six targets. Use the `--platform` flag when scaffolding to target your desired platform. Each gets exactly the dependencies, scripts, and config it needs — nothing more.
+
+| Platform | Description |
+|----------|-------------|
+| **Web** | Standard Vite + React SPA with file-based routing and Hono API layer |
+| **Windows** | Native desktop binary running inside WebView2 with Authenticode signing |
+| **macOS** | Native desktop binary running inside WKWebView with Developer ID + notarization |
+| **Linux** | Native desktop binary in WebKitGTK, distributed as a GPG-signed AppImage |
+| **Android** | Real native APK/AAB via Tauri's Android backend — not a WebView wrapper |
+| **iOS** | Real native app via Tauri's iOS backend, running inside WKWebView |
+
+---
+
+## Project Structure
+
+```bash
+my-app/
+├── src/
+│   ├── main.tsx              # React entry point
+│   ├── App.tsx               # Auto-generated by bini-router — do not edit
+│   └── app/
+│       ├── globals.css
+│       ├── layout.tsx        # Root layout + global metadata
+│       ├── page.tsx          # / (home page)
+│       └── api/
+│           └── hello.ts      # GET /api/hello
+├── src-tauri/                # Tauri configuration (desktop & mobile)
+│   ├── Cargo.toml            # Rust dependencies
+│   ├── tauri.conf.json       # Tauri app configuration
+│   ├── src/                  # Rust source code
+│   └── gen/                  # Android & iOS projects (generated)
+├── public/
+│   ├── favicon.ico
+│   ├── apple-touch-icon.png
+│   ├── logo.png              # Source icon for native app icons
+│   └── og-image.png
+├── vite.config.ts
+├── package.json
+└── tsconfig.json
+```
+
+---
+
+## Core Features
+
+### File-based Routing
+
+Every `page.tsx` in `src/app/` becomes a route. Dynamic segments use `[param]` folder names.
+
+```bash
+src/app/
+  page.tsx              → /
+  about/page.tsx        → /about
+  blog/[slug]/page.tsx  → /blog/:slug
+  [...all]/page.tsx     → /* (catch-all)
+  not-found.tsx         → Not found page
+  loading.tsx           → Loading UI (Suspense fallback)
+```
+
+### API Routes
+
+Drop a handler file anywhere under `src/app/api/`. Plain handlers or full [Hono](https://hono.dev) apps both work.
+
+```ts
+// src/app/api/hello.ts — plain handler
+export default function handler(req: Request) {
+  return Response.json({ message: 'Hello from Bini.js!' })
+}
+```
+
+```ts
+// src/app/api/users/[id].ts — Hono app, dynamic segment
+import { Hono } from 'hono'
+
+const app = new Hono()
+app.get('/users/:id', (c) => c.json({ id: c.req.param('id') }))
+
+export default app
+```
+
+### Layouts & Metadata
+
+Wrap pages with shared UI and export metadata — bini-router injects the right `<meta>` tags at build time, never in the client bundle.
+
+```tsx
+// src/app/layout.tsx
+export const metadata = {
+  title      : 'Bini.js - React Framework for Cross-Platform',
+  description: 'One codebase. Six platforms. Zero boilerplate. Write React, ship everywhere.',
+  themeColor : '#00CFFF',
+  openGraph  : { title: 'Bini.js', url: 'https://bini.js.org' },
+}
+
+export default function RootLayout({ children }) {
+  return <>{children}</>
+}
+```
+
+### Native Plugin Wiring
+
+Bini.js automatically wires native plugins for desktop and mobile platforms. `bini-native` detects the web APIs you call and handles everything:
+
+- **Auto plugin detection** — Identifies which Tauri plugins you need
+- **Cargo.toml wiring** — Adds the right Rust dependencies
+- **Capability permissions** — Configures the permissions your app needs
+- **Android/iOS manifests** — Updates platform manifests automatically
+- **Zero manual edits** — No need to touch Rust or native config files
+
+---
+
+## Deploy
+
+Set `platform` in `vite.config.ts` and run `vite build`. Bini.js generates the correct entry file for your target.
+
+```ts
+// vite.config.ts
+import { biniroute } from 'bini-router'
+
+export default {
+  plugins: [react(), biniroute({ platform: 'netlify' })],
+}
+```
+
+| Platform     | Generated file                          |
+|--------------|-----------------------------------------|
+| `netlify`    | `netlify/edge-functions/api.ts`         |
+| `vercel`     | `api/index.ts`                          |
+| `cloudflare` | `worker.ts`                             |
+| `node`       | *(handled by bini-server)*              |
+| `deno`       | `server/index.ts`                       |
+
+---
+
+## Packages
+
+Bini.js is built around a set of focused packages. Each one does one thing well.
+
+### `create-bini-app` · [npm](https://www.npmjs.com/package/create-bini-app)
+
+The official project scaffold CLI. Run `npx create-bini-app@latest` to get a full project with routing, API routes, and your choice of TypeScript or JavaScript, Tailwind or CSS Modules, and platform target — ready in seconds.
+
+### `bini-router` · [npm](https://www.npmjs.com/package/bini-router)
+
+The core of Bini.js. Scans `src/app/` on every file change and regenerates the React Router tree instantly with HMR. Supports nested layouts, per-route metadata, auto-imports for React and React Router hooks, Hono-powered API routes, and built-in error boundaries. Reads `metadata` exports from layouts at build time and injects the right `<meta>` tags into `index.html`. Generates the correct deploy entry file for your target platform on every `vite build`.
+
+### `bini-native` · [npm](https://www.npmjs.com/package/bini-native)
+
+Automatic Tauri plugin wiring for desktop and mobile. Detects the web APIs you call and wires Rust plugins, Cargo.toml, capabilities, and Android/iOS manifests. Dev-only — your production build stays untouched. Zero manual edits required.
+
+### `bini-server` · [npm](https://www.npmjs.com/package/bini-server)
+
+A production server for bini-router apps (requires Node ≥ 20). Serves your `dist/` folder as static files, handles `/api/*` from your `src/app/api/` handlers, and falls back to `index.html` for SPA routing. Includes ETag support, configurable timeouts, body size limits, port auto-increment, graceful shutdown, and interactive keyboard shortcuts.
+
+```bash
+# package.json
+"scripts": {
+  "build": "vite build",
+  "start": "bini-server"
+}
+```
+
+### `bini-overlay` · [npm](https://www.npmjs.com/package/bini-overlay)
+
+A dev-only Vite plugin that injects an animated `ß` badge into your app. Shows a loading spinner during HMR updates, a glowing idle badge when the app is ready, and a full source-mapped error overlay on runtime or compile errors. Automatically stripped from production builds — zero bundle size impact.
+
+### `bini-export` · [npm](https://www.npmjs.com/package/bini-export)
+
+Generates a fully static SPA export. Pre-renders every static route to its own `index.html` and creates the correct `404.html` for GitHub Pages, Netlify, and S3. Dynamic routes resolve client-side. Handles the `base` path for GitHub Pages subpath deploys automatically.
+
+```ts
+import { biniExport } from 'bini-export'
+// add to plugins in vite.config.ts alongside biniroute()
+```
+
+### `bini-env` · [npm](https://www.npmjs.com/package/bini-env)
+
+A universal environment variable system + Vite plugin. Loads `.env` files automatically in priority order and prints which ones are active on every dev/preview start. `getEnv()` and `requireEnv()` are auto-imported and work in Node.js, Bun, Deno, and edge runtimes.
+
+```bash
+# .env
+BINI_PUBLIC_API_URL=https://api.example.com   # client-side: import.meta.env.BINI_*
+SMTP_USER=user@smtp.example.com               # server-side: requireEnv() in API routes
+```
+
+```ts
+import { getEnv, requireEnv } from 'bini-env'
+
+app.get('/hello', (c) => {
+  const apiKey = requireEnv(c, 'SMTP_USER')   // throws if missing
+  return c.json({ message: 'Hello!' })
+})
+```
+
+```bash
+  ß Bini.js (dev)
+  ➜  Environments: .env.local, .env
+  ➜  Local:   http://localhost:3000/
+```
+
+---
+
+## Package Summary
+
+| Package | Description |
 |---|---|
-| `pnpm run dev` | Start the Vite development server with HMR |
-| `pnpm run build` | Type-check and build the production application |
-| `pnpm start` | Serve production output using bini-server |
-| `pnpm run export` | Export the application as a static SPA |
-| `pnpm run preview` | Preview the production build |
-
-`start` and `export` are available only for web-target projects.
-
-Desktop and mobile targets ship as native applications instead.
-
-## Requirements
-
-- Node.js >= 20.19.0
-
-No native SDKs, platform toolchains, or signing setup required.
+| [`create-bini-app`](https://www.npmjs.com/package/create-bini-app) | Project scaffold CLI with platform targeting |
+| [`bini-router`](https://www.npmjs.com/package/bini-router) | File routing, API routes, metadata, deploy entries |
+| [`bini-native`](https://www.npmjs.com/package/bini-native) | Automatic Tauri plugin wiring for desktop and mobile |
+| [`bini-server`](https://www.npmjs.com/package/bini-server) | Production Node.js server — static files, API routes, SPA fallback (Node ≥ 20) |
+| [`bini-overlay`](https://www.npmjs.com/package/bini-overlay) | Animated dev badge + source-mapped error overlay |
+| [`bini-export`](https://www.npmjs.com/package/bini-export) | Static SPA export for GitHub Pages, Netlify, S3 |
+| [`bini-env`](https://www.npmjs.com/package/bini-env) | Universal env vars + Vite plugin with startup banner |
 
 ---
 
-# Windows Desktop
+## Configuration
 
-## Features
-
-- Builds a native Windows desktop application using **Tauri** and **WebView2**.
-- Small application size without bundling a complete browser engine.
-- Native APIs automatically configured through **bini-native**:
-  - Filesystem
-  - Clipboard
-  - Notifications
-  - Dialogs
-  - OS information
-- External URLs automatically open in the user's default browser.
-- Supports Windows application signing through Authenticode.
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `pnpm run tauri:dev` | Start the application in development mode |
-| `pnpm run tauri:build` | Build a distributable Windows application |
-| `pnpm run tauri:icon` | Generate application icons from `public/logo.png` |
-
-## Requirements
-
-- Microsoft C++ Build Tools
-
-Install:
-
-```
-Desktop development with C++
+```ts
+// vite.config.ts
+biniroute({
+  platform  : 'netlify',     // 'netlify' | 'vercel' | 'cloudflare' | 'deno' | 'node'
+  appDir    : 'src/app',     // default — scanned for page.tsx / layout.tsx
+  apiDir    : 'src/app/api', // default — scanned for API handlers
+  cors      : true,          // enable CORS on dev/preview API routes
+  strictMode: true,          // throw on route conflicts
+  basePath  : '',            // subpath prefix, e.g. '/app'
+})
 ```
 
-- Microsoft Edge WebView2 Runtime
-
-Verify installation:
-
-```bash
-cl
-```
+See the [full config reference](https://bini.js.org/plugins) for all options.
 
 ---
 
-# macOS Desktop
+## License
 
-## Features
-
-- Builds a native macOS application using **Tauri** and **WKWebView**.
-- Native API integration automatically configured by **bini-native**.
-- Supports:
-  - Filesystem access
-  - Clipboard access
-  - Notifications
-  - Dialogs
-- External URLs open in the user's default browser.
-- Supports:
-  - Ad-hoc signing for local testing
-  - Developer ID signing
-  - Application notarization
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `pnpm run tauri:dev` | Start the application in development mode |
-| `pnpm run tauri:build` | Build a distributable macOS application |
-| `pnpm run tauri:icon` | Generate application icons from `public/logo.png` |
-
-## Requirements
-
-- macOS
-- Xcode Command Line Tools
-
-```bash
-xcode-select --install
-```
-
-- Homebrew
-
-- Tauri dependencies:
-
-```bash
-brew install gtk+3 webkit2gtk pkg-config
-```
-
-- Xcode (required for iOS development)
-
----
-
-# Linux Desktop
-
-## Features
-
-- Builds native Linux applications using **Tauri** and **WebKitGTK**.
-- Automatic native API integration through **bini-native**.
-- Supports:
-  - Filesystem
-  - Clipboard
-  - Notifications
-  - Dialogs
-- External links open using the system browser.
-- Supports AppImage distribution.
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `pnpm run tauri:dev` | Start the application in development mode |
-| `pnpm run tauri:build` | Build Linux binaries/AppImage |
-| `pnpm run tauri:icon` | Generate application icons from `public/logo.png` |
-
-## Requirements
-
-### Debian / Ubuntu
-
-```bash
-sudo apt update
-
-sudo apt install -y \
-libwebkit2gtk-4.0-dev \
-build-essential \
-libssl-dev \
-libgtk-3-dev \
-libayatana-appindicator3-dev \
-librsvg2-dev \
-libxdo-dev \
-pkg-config
-```
-
-### Fedora
-
-```bash
-sudo dnf groupinstall "C Development Tools and Libraries"
-
-sudo dnf install \
-webkit2gtk4.0-devel \
-openssl-devel \
-gtk3-devel \
-libappindicator-gtk3-devel \
-librsvg2-devel \
-libxdo-devel \
-pkg-config
-```
-
-### Arch
-
-```bash
-sudo pacman -S \
-webkit2gtk \
-base-devel \
-openssl \
-gtk3 \
-libappindicator-gtk3 \
-librsvg \
-libxdo \
-pkg-config
-```
-
----
-
-# Android
-
-## Features
-
-- Builds a real native Android application using Tauri's Android backend.
-- Not a browser wrapper.
-- Native capabilities automatically wired by **bini-native**:
-  - Camera
-  - Filesystem
-  - Notifications
-  - Geolocation
-  - Device APIs
-- Android configuration available through:
-
-```
-src-tauri/gen/android
-```
-
-- Supports release signing with:
-  - Android keystore
-  - keystore.properties
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `pnpm run android` | Run on a connected Android emulator or device |
-| `pnpm run android:build` | Build a release APK/AAB |
-| `pnpm run tauri -- android dev` | Manual equivalent of `pnpm run android` |
-| `pnpm run tauri -- android build` | Manual equivalent of `pnpm run android:build` |
-
-## Requirements
-
-- Java JDK 17
-- Android Studio
-- Android SDK
-- Android Build Tools
-- Android NDK
-
-Environment variables:
-
-```
-JAVA_HOME
-ANDROID_HOME
-```
-
-Rust targets:
-
-```bash
-rustup target add aarch64-linux-android
-rustup target add armv7-linux-androideabi
-rustup target add i686-linux-android
-rustup target add x86_64-linux-android
-```
-
----
-
-# iOS
-
-## Features
-
-- Builds a native iOS application using Tauri's iOS backend.
-- Uses Apple's WKWebView runtime.
-- Native plugin integration automatically managed by **bini-native**.
-- Supports:
-  - Automatic Xcode signing
-  - Manual certificates
-  - CI signing workflows
-
-iOS builds require macOS.
-
-Windows and Linux cannot generate iOS applications.
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `pnpm run ios` | Run on the iOS Simulator or a connected device |
-| `pnpm run ios:build` | Build the iOS application |
-| `pnpm run tauri -- ios dev` | Manual equivalent of `pnpm run ios` |
-| `pnpm run tauri -- ios build` | Manual equivalent of `pnpm run ios:build` |
-
-## Requirements
-
-(macOS only)
-
-- Xcode
-- Xcode Command Line Tools
-
-```bash
-xcode-select --install
-```
-
-- CocoaPods
-
-```bash
-sudo gem install cocoapods
-```
-
-Rust targets:
-
-```bash
-rustup target add aarch64-apple-ios
-rustup target add x86_64-apple-ios
-rustup target add aarch64-apple-ios-sim
-```
-
----
-
-# Native Integration
-
-## bini-native
-
-bini-native automatically manages Tauri native configuration during development and builds.
-
-Handled automatically:
-
-- Tauri plugin registration
-- Rust dependencies
-- Capability permissions
-- Android configuration
-- iOS configuration
-- macOS configuration
-
-No manual native wiring required.
-
----
-
-# Code Signing
-
-Signing configuration is stored in git-ignored files.
-
-Desktop signing:
-
-```
-.env.signing
-```
-
-Supported platforms:
-
-- Windows
-- macOS
-- Linux
-
-Android signing:
-
-```
-src-tauri/gen/android/keystore.properties
-```
-
----
-
-# Built With
-
-The Bini.js ecosystem:
-
-- **Vite** — modern build pipeline with Rolldown-powered builds
-- **Hono** — lightweight API framework
-- **bini-router** — filesystem routing and API middleware
-- **bini-export** — static SPA export
-- **bini-server** — zero-dependency production server
-- **bini-native** — automatic Tauri integration
-- **bini-env** — environment configuration
-- **bini-overlay** — development tooling
-- **Oxlint** — fast Rust-based linting
-- **Oxfmt** — Prettier-compatible formatter
-
-- **TypeScript** — static type safety
-
----
-
-# Documentation
-
-https://bini.js.org
-
----
-
-Built with **Bini.js v10.0.0**
+MIT © [Binidu Ranasinghe](https://github.com/Binidu01)
