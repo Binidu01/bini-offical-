@@ -54,6 +54,9 @@ const searchSuggestions = [
   { label: 'Tailwind CSS', path: '/docs/tailwind', type: 'docs', keywords: ['tailwind', 'css', 'utility', 'classes'] },
   { label: 'CSS Modules', path: '/docs/css-modules', type: 'docs', keywords: ['modules', 'css', 'scoped', 'styles'] },
   
+  // Docs - Platforms
+  { label: 'Platforms', path: '/docs/platforms', type: 'docs', keywords: ['platform', 'web', 'windows', 'macos', 'linux', 'android', 'ios', 'native', 'desktop', 'mobile', 'tauri'] },
+  
   // Docs - Deployment
   { label: 'Static Export', path: '/docs/static-export', type: 'docs', keywords: ['static', 'export', 'spa', 'build'] },
   { label: 'Environment Variables', path: '/docs/environment-variables', type: 'docs', keywords: ['.env', 'environment', 'variables', 'secrets'] },
@@ -65,6 +68,7 @@ const searchSuggestions = [
   // Plugins - Official
   { label: 'bini-router', path: '/plugins', type: 'plugin', keywords: ['router', 'routing', 'file-based', 'api', 'hono', 'vite'] },
   { label: 'bini-env', path: '/plugins', type: 'plugin', keywords: ['env', 'environment', 'variables', 'secrets', 'universal'] },
+  { label: 'bini-native', path: '/plugins', type: 'plugin', keywords: ['native', 'tauri', 'plugin', 'wiring', 'rust', 'cargo', 'android', 'ios', 'desktop', 'mobile', 'api'] },
   { label: 'bini-server', path: '/plugins', type: 'plugin', keywords: ['server', 'production', 'static', 'etag', 'spa'] },
   { label: 'bini-overlay', path: '/plugins', type: 'plugin', keywords: ['overlay', 'error', 'loading', 'development', 'badge'] },
   { label: 'bini-export', path: '/plugins', type: 'plugin', keywords: ['export', 'static', 'spa', 'github pages', 'pre-render'] },
@@ -274,6 +278,17 @@ export const Header = () => {
                 </kbd>
               </button>
 
+              {/* npm - desktop */}
+              <a
+                href="https://www.npmjs.com/package/create-bini-app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900 border border-slate-800"
+              >
+                <SimpleIcon icon={siNpm} size={16} />
+                <span>npm</span>
+              </a>
+
               {/* GitHub stars - desktop */}
               <a
                 href="https://github.com/Binidu01/bini-cli"
@@ -294,6 +309,17 @@ export const Header = () => {
                 aria-label="GitHub"
               >
                 <SimpleIcon icon={siGithub} size={18} />
+              </a>
+
+              {/* npm icon - mobile */}
+              <a
+                href="https://www.npmjs.com/package/create-bini-app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sm:hidden p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900"
+                aria-label="npm"
+              >
+                <SimpleIcon icon={siNpm} size={18} />
               </a>
 
               {/* Mobile menu button */}
@@ -511,7 +537,7 @@ export const Footer = () => {
               <img src="/bini.svg" alt="Bini.js" className="h-6" />
             </div>
             <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              A zero-config React framework with file-based routing, Hono API routes, and multi-platform deployment.
+              A native React framework for building cross-platform deployment from a single codebase.
             </p>
             <div className="flex items-center gap-1">
               <a
@@ -522,6 +548,15 @@ export const Footer = () => {
                 aria-label="GitHub"
               >
                 <SimpleIcon icon={siGithub} size={18} />
+              </a>
+              <a
+                href="https://www.npmjs.com/package/create-bini-app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900"
+                aria-label="npm"
+              >
+                <SimpleIcon icon={siNpm} size={18} />
               </a>
             </div>
           </div>

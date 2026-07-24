@@ -1,5 +1,5 @@
 {
-  "name": "official-site",
+  "name": "bini-official",
   "type": "module",
   "version": "1.0.0",
   "scripts": {
@@ -17,13 +17,13 @@
     "bini-overlay": "latest",
     "bini-router": "latest",
     "bini-server": "latest",
-    "framer-motion": "^12.38.0",
+    "framer-motion": "^12.42.2",
     "hono": "latest",
-    "lucide-react": "^1.14.0",
+    "lucide-react": "^1.25.0",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest",
-    "simple-icons": "^16.19.0"
+    "simple-icons": "^16.27.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "latest",

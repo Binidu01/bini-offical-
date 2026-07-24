@@ -237,6 +237,13 @@ export default function PluginsPage() {
                 official
               />
               <PluginCard
+                name="bini-native"
+                description="Automatic Tauri plugin wiring for desktop and mobile. Detects the web APIs you call and wires Rust plugins, Cargo.toml, capabilities, and Android/iOS manifests — dev-only, build stays untouched."
+                href="https://www.npmjs.com/package/bini-native"
+                githubRepo="bini-native"
+                official
+              />
+              <PluginCard
                 name="bini-server"
                 description="Zero-dependency production server for bini-router apps. Serves static files, handles API routes, and provides SPA fallback with ETag support."
                 href="https://www.npmjs.com/package/bini-server"
@@ -250,15 +257,6 @@ export default function PluginsPage() {
                 githubRepo="bini-overlay"
                 official
               />
-            </div>
-          </Section>
-
-          {/* Additional Plugins */}
-          <Section title="Additional Plugins">
-            <p className="text-slate-300 mb-6">
-              Optional plugins maintained by the Bini.js team for specific deployment scenarios.
-            </p>
-            <div className="max-w-2xl">
               <PluginCard
                 name="bini-export"
                 description="Static SPA export for bini-router. Pre-renders routes, generates 404.html, and strips platform files for GitHub Pages and other fully static hosts."

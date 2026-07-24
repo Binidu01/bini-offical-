@@ -7,5 +7,4 @@ dist/
 Thumbs.db
 *.log
 
-# bini-router generated production entry — do not edit directly
 netlify/edge-functions/api.ts

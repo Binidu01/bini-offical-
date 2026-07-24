@@ -10,6 +10,11 @@ import {
   ArrowRight,
   Copy,
   Check,
+  Smartphone,
+  Laptop,
+  Globe,
+  Cpu,
+  Boxes,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
@@ -286,6 +291,46 @@ export default function InstallationPage() {
                 </p>
               </motion.section>
 
+              {/* Native Platform Support Section - NEW */}
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Native Platform Support</h2>
+                <p className="text-slate-300 mb-4">
+                  Bini.js lets you build for multiple platforms from a single codebase. Use the <code className="text-cyan-400">--platform</code> flag to target your desired platform during scaffold:
+                </p>
+
+                <CodeBlock 
+                  code={`npx create-bini-app@latest my-app --platform macos\nnpx create-bini-app@latest my-app --platform android --app-name "My App" --nosign\nnpx create-bini-app@latest my-app --platform windows`}
+                />
+
+                <div className="grid sm:grid-cols-3 gap-3 mb-4">
+                  <div className="p-4 rounded-xl border border-slate-700 bg-[#0a0a0a] hover:border-slate-600 transition-colors">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Globe className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Web</span>
+                    </div>
+                    <p className="text-slate-400 text-xs">Default target — Vite + React SPA with Hono API layer</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-slate-700 bg-[#0a0a0a] hover:border-slate-600 transition-colors">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Laptop className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Desktop</span>
+                    </div>
+                    <p className="text-slate-400 text-xs">Windows, macOS, Linux — real native binaries via Tauri</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-slate-700 bg-[#0a0a0a] hover:border-slate-600 transition-colors">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Smartphone className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Mobile</span>
+                    </div>
+                    <p className="text-slate-400 text-xs">Android & iOS — real native apps, not WebView wrappers</p>
+                  </div>
+                </div>
+
+                <Callout type="tip">
+                  <strong>One codebase, every target.</strong> The same routes, API handlers, and components compile to a web app, a desktop binary, or a mobile app. Nothing is emulated or wrapped — desktop and mobile builds are real Tauri apps.
+                </Callout>
+              </motion.section>
+
               {/* System requirements */}
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
                 <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">System requirements</h2>
@@ -293,6 +338,8 @@ export default function InstallationPage() {
                 <ul className="space-y-2 text-slate-300 mb-6 list-disc list-inside">
                   <li>Minimum Node.js version: <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">20.19.0</a></li>
                   <li>Operating systems: macOS, Windows, and Linux.</li>
+                  <li>For desktop builds: <span className="text-white">Windows</span> (C++ Build Tools), <span className="text-white">macOS</span> (Xcode CLT), <span className="text-white">Linux</span> (WebKitGTK)</li>
+                  <li>For mobile builds: <span className="text-white">Android</span> (JDK 17, Android Studio), <span className="text-white">iOS</span> (Xcode, CocoaPods)</li>
                 </ul>
               </motion.section>
 
@@ -322,7 +369,7 @@ export default function InstallationPage() {
                 
                 <p className="text-slate-300 mt-6">On installation, you'll see the following prompts:</p>
                 <PromptTerminal 
-                  code={`What is your project named? my-app\nWould you like to use TypeScript? No / Yes\nWould you like to use Tailwind CSS? No / Yes (CSS Modules) / None`}
+                  code={`What is your project named? my-app\nWould you like to use TypeScript? No / Yes\nWould you like to use Tailwind CSS? No / Yes (CSS Modules) / None\nWhich platform would you like to target? web / windows / macos / linux / android / ios`}
                 />
                 
                 <p className="text-slate-300 mt-6">After the prompts, <code className="text-cyan-400">create-bini-app</code> will create a folder with your project name and install the required dependencies.</p>
@@ -338,11 +385,11 @@ export default function InstallationPage() {
                 </ol>
               </motion.section>
 
-              {/* CLI Flags */}
+              {/* CLI Flags - Updated with platform flags */}
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
                 <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CLI Flags</h2>
                 <p className="text-slate-300 mb-4">Skip prompts by passing flags directly:</p>
-                <CodeBlock code={`npx create-bini-app@latest my-app --typescript --tailwind\nnpx create-bini-app@latest my-app --javascript --css-modules\nnpx create-bini-app@latest my-app --none\nnpx create-bini-app@latest my-app --force\nnpx create-bini-app@latest my-app --install`} />
+                <CodeBlock code={`npx create-bini-app@latest my-app --typescript --tailwind\nnpx create-bini-app@latest my-app --javascript --css-modules\nnpx create-bini-app@latest my-app --platform macos\nnpx create-bini-app@latest my-app --platform android --app-name "My App" --nosign\nnpx create-bini-app@latest my-app --none\nnpx create-bini-app@latest my-app --force\nnpx create-bini-app@latest my-app --install`} />
                 <Table 
                   headers={['Flag', 'Description']} 
                   rows={[
@@ -351,15 +398,18 @@ export default function InstallationPage() {
                     ['--tailwind', 'Use Tailwind CSS (default)'],
                     ['--css-modules', 'Use CSS Modules'],
                     ['--none', 'No styling — clean slate'],
+                    ['--platform <target>', 'web · windows · macos · linux · android · ios'],
+                    ['--app-name <name>', 'Display name — desktop/mobile app name and window title'],
+                    ['--sign / --nosign', 'Auto-confirm or skip code-signing setup'],
+                    ['--npm / --pnpm / --yarn / --bun', 'Force a specific package manager'],
+                    ['--install / --no-install', 'Install dependencies without prompting'],
                     ['--force', 'Overwrite existing directory'],
-                    ['--install', 'Auto-install dependencies'],
-                    ['--no-install', 'Skip installation'],
                     ['--version, -v', 'Print CLI version'],
                     ['--help, -h', 'Show help'],
                   ]} 
                 />
                 <Callout type="info">
-                  In non-interactive mode (CI), the CLI skips prompts and uses defaults: TypeScript and Tailwind CSS. Pass flags to override.
+                  In non-interactive mode (CI), the CLI skips prompts and uses defaults: TypeScript, Tailwind CSS, and the <code className="text-cyan-400">web</code> platform. Pass flags to override.
                 </Callout>
               </motion.section>
 

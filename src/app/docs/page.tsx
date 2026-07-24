@@ -5,6 +5,14 @@ import {
   MessageCircle,
   ExternalLink,
   ArrowRight,
+  Smartphone,
+  Laptop,
+  Tablet,
+  Globe,
+  Cpu,
+  ShieldCheck,
+  Gauge,
+  Boxes,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
@@ -64,14 +72,95 @@ export default function DocsPage() {
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-12">
                 <h2 className="text-2xl font-bold text-white mb-4">What is Bini.js?</h2>
                 <p className="text-white leading-relaxed">
-                  Bini.js is a React framework for building modern single-page applications (SPAs). You use React Components to build user interfaces, and Bini.js for additional features and optimizations.
+                  Bini.js is a React framework for building modern applications that run natively across web, desktop, and mobile — all from a single codebase. You use React Components to build user interfaces, and Bini.js handles the complexity of multi-platform deployment.
                 </p>
                 <p className="text-white mt-4 leading-relaxed">
-                  It automatically configures lower-level tools like Vite, React Router, and Hono. You can instead focus on building your product and shipping quickly.
+                  It automatically configures lower-level tools like Vite, React Router, and Hono, while providing a seamless path to native apps through Tauri. You can focus on building your product and shipping quickly, without worrying about the underlying platform differences.
                 </p>
                 <p className="text-white mt-4 leading-relaxed">
-                  Whether you're an individual developer or part of a larger team, Bini.js can help you build interactive, dynamic, and fast React applications.
+                  Whether you're building a web app, a desktop application for Windows, macOS, or Linux, or a mobile app for Android and iOS — Bini.js gives you the tools to do it all from one project.
                 </p>
+              </motion.section>
+
+              {/* Native Capabilities Section - NEW */}
+              <motion.section 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.12 }} 
+                className="mb-12"
+              >
+                <h2 className="text-2xl font-bold text-white mb-4">Native Apps from a Single Codebase</h2>
+                <p className="text-white mb-6 leading-relaxed">
+                  Bini.js goes beyond the browser. With Tauri integration, your React app becomes a real native application on every major platform — not a wrapped web view.
+                </p>
+
+                <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                  <div className="p-5 rounded-xl border border-white/10 bg-white/5 hover:border-cyan-500/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
+                        <Laptop className="w-5 h-5 text-cyan-400" />
+                      </div>
+                      <h3 className="text-white font-semibold">Desktop Apps</h3>
+                    </div>
+                    <ul className="space-y-2 text-white/80 text-sm">
+                      <li className="flex items-start gap-2">
+                        <span className="text-cyan-400 mt-0.5">•</span>
+                        <span><span className="text-white font-medium">Windows</span> — Native WebView2 binary with Authenticode signing</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-cyan-400 mt-0.5">•</span>
+                        <span><span className="text-white font-medium">macOS</span> — Native WKWebView app with Developer ID notarization</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-cyan-400 mt-0.5">•</span>
+                        <span><span className="text-white font-medium">Linux</span> — Native WebKitGTK binary as a GPG-signed AppImage</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="p-5 rounded-xl border border-white/10 bg-white/5 hover:border-cyan-500/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center">
+                        <Smartphone className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <h3 className="text-white font-semibold">Mobile Apps</h3>
+                    </div>
+                    <ul className="space-y-2 text-white/80 text-sm">
+                      <li className="flex items-start gap-2">
+                        <span className="text-purple-400 mt-0.5">•</span>
+                        <span><span className="text-white font-medium">Android</span> — Native APK/AAB via Tauri's Android backend</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-purple-400 mt-0.5">•</span>
+                        <span><span className="text-white font-medium">iOS</span> — Native app via Tauri's iOS backend, running in WKWebView</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-3">
+                  <div className="p-4 rounded-xl border border-white/5 bg-white/5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Cpu className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Real Native</span>
+                    </div>
+                    <p className="text-white/60 text-xs">Not wrapped — compiled to native binaries with full system access</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-white/5 bg-white/5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Auto Plugin Wiring</span>
+                    </div>
+                    <p className="text-white/60 text-xs">bini-native detects web APIs you call and wires Rust plugins automatically</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-white/5 bg-white/5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Boxes className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">One Codebase</span>
+                    </div>
+                    <p className="text-white/60 text-xs">Same routes, API handlers, and components compile to every target</p>
+                  </div>
+                </div>
               </motion.section>
 
               {/* How to use the docs */}
@@ -85,6 +174,7 @@ export default function DocsPage() {
                   <li><span className="font-medium text-cyan-400">Routing:</span> Learn about folder-based and file-based routing, dynamic routes, and more.</li>
                   <li><span className="font-medium text-cyan-400">API Routes:</span> Build backend endpoints with Hono or plain functions.</li>
                   <li><span className="font-medium text-cyan-400">Styling:</span> Style your app with Tailwind CSS, CSS Modules, or plain CSS.</li>
+                  <li><span className="font-medium text-cyan-400">Platforms:</span> Build for web, Windows, macOS, Linux, Android, and iOS from one codebase.</li>
                   <li><span className="font-medium text-cyan-400">Deployment:</span> Deploy to Node.js, Netlify, Vercel, Cloudflare, or Deno.</li>
                 </ul>
               </motion.section>
@@ -107,7 +197,6 @@ export default function DocsPage() {
                       <li><code className="text-cyan-400">layout.tsx</code> — Wraps pages and nested layouts, persists across navigation</li>
                       <li><code className="text-cyan-400">loading.tsx</code> — Shows loading UI while the page content streams</li>
                       <li><code className="text-cyan-400">not-found.tsx</code> — Custom 404 page for unmatched routes</li>
-                      <li><code className="text-cyan-400">error.tsx</code> — Error boundary for handling runtime errors</li>
                     </ul>
                   </li>
                 </ul>

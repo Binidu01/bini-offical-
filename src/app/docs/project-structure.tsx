@@ -4,6 +4,10 @@ import { motion } from 'framer-motion'
 import {
   ArrowLeft,
   ArrowRight,
+  Smartphone,
+  Laptop,
+  Globe,
+  Boxes,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
@@ -37,6 +41,27 @@ function CodeBlock({ code, filename }: { code: string; filename?: string }) {
       <pre className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} p-4 overflow-x-auto`}>
         <code className="text-sm font-mono text-slate-200">{code}</code>
       </pre>
+    </div>
+  )
+}
+
+// ────────────────────────────────────────────────────────────────────────────────
+// Callout Component
+// ────────────────────────────────────────────────────────────────────────────────
+function Callout({ type, children }: { type: 'info' | 'warning' | 'success' | 'tip'; children: React.ReactNode }) {
+  const styles = {
+    info: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', icon: (props: any) => <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, color: 'text-cyan-400' },
+    warning: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', icon: (props: any) => <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>, color: 'text-amber-400' },
+    success: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', icon: (props: any) => <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, color: 'text-emerald-400' },
+    tip: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', icon: (props: any) => <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>, color: 'text-purple-400' },
+  }
+  const style = styles[type]
+  const Icon = style.icon
+
+  return (
+    <div className={`flex items-start gap-3 p-4 rounded-lg ${style.bg} border ${style.border} my-6`}>
+      <Icon className={`w-5 h-5 ${style.color} shrink-0 mt-0.5`} />
+      <div className="text-sm text-slate-200 [&>strong]:text-white [&>code]:text-cyan-400 [&>code]:bg-slate-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded">{children}</div>
     </div>
   )
 }
@@ -81,7 +106,7 @@ export default function ProjectStructurePage() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                 <h1 className="text-4xl font-bold text-white mb-2">Project Structure</h1>
                 <p className="text-slate-400 text-sm mb-8">
-                  Learn the folder and file conventions in Bini.js, and how to organize your project.
+                  Learn the folder and file conventions in Bini.js, and how to organize your project for cross-platform development.
                 </p>
               </motion.div>
 
@@ -89,8 +114,44 @@ export default function ProjectStructurePage() {
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                 <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Folder and file conventions</h2>
                 <p className="text-slate-300 mb-4">
-                  This page provides an overview of all the folder and file conventions in Bini.js, and recommendations for organizing your project.
+                  This page provides an overview of all the folder and file conventions in Bini.js, and recommendations for organizing your project across web, desktop, and mobile platforms.
                 </p>
+              </motion.section>
+
+              {/* Cross-Platform Structure */}
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Cross-Platform Project Structure</h2>
+                <p className="text-slate-300 mb-4">
+                  Bini.js projects are designed to work across all platforms from a single codebase. The same folder structure works for web, desktop, and mobile:
+                </p>
+
+                <div className="grid sm:grid-cols-3 gap-3 mb-4">
+                  <div className="p-4 rounded-xl border border-slate-700 bg-[#0a0a0a]">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Globe className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Web</span>
+                    </div>
+                    <p className="text-slate-400 text-xs">Uses <code className="text-cyan-400">src/app/</code> with <code className="text-cyan-400">bini-server</code> and <code className="text-cyan-400">bini-export</code></p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-slate-700 bg-[#0a0a0a]">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Laptop className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Desktop</span>
+                    </div>
+                    <p className="text-slate-400 text-xs">Adds <code className="text-cyan-400">src-tauri/</code> for Windows, macOS, Linux native binaries</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-slate-700 bg-[#0a0a0a]">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Smartphone className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium text-sm">Mobile</span>
+                    </div>
+                    <p className="text-slate-400 text-xs">Adds <code className="text-cyan-400">src-tauri/gen/</code> for Android and iOS</p>
+                  </div>
+                </div>
+
+                <Callout type="tip">
+                  <strong>One structure, every target.</strong> The same <code className="text-cyan-400">src/app/</code> routes, API handlers, and components work on web, desktop, and mobile. Platform-specific files are generated automatically.
+                </Callout>
               </motion.section>
 
               {/* Top-level folders */}
@@ -104,6 +165,7 @@ export default function ProjectStructurePage() {
                   rows={[
                     ['src/', 'Application source folder'],
                     ['src/app', 'App Router — file-based routing and layouts'],
+                    ['src-tauri/', 'Tauri configuration for desktop & mobile (generated)'],
                     ['public', 'Static assets to be served at root URL'],
                     ['dist/', 'Production build output (generated)'],
                   ]}
@@ -172,9 +234,15 @@ export default function ProjectStructurePage() {
 │   │   └── globals.css    ← Global styles
 │   ├── main.tsx           ← React entry point
 │   └── App.tsx            ← Auto-generated — do not edit
+├── src-tauri/             ← Tauri configuration (desktop & mobile)
+│   ├── Cargo.toml         ← Rust dependencies
+│   ├── tauri.conf.json    ← Tauri app configuration
+│   ├── src/               ← Rust source code
+│   └── gen/               ← Android & iOS projects (generated)
 ├── public/                ← Static assets
 │   ├── favicon.ico
 │   ├── apple-touch-icon.png
+│   ├── logo.png           ← Source icon for native app icons
 │   └── og-image.png
 ├── index.html             ← HTML entry point with <html> and <body>
 ├── vite.config.ts         ← Vite configuration
@@ -185,6 +253,28 @@ export default function ProjectStructurePage() {
                 <p className="text-slate-400 text-sm mt-2 mb-8">
                   <strong className="text-white">Note:</strong> <code className="text-cyan-400">App.tsx</code> is auto-generated by bini-router. Never edit this file directly.
                 </p>
+              </motion.section>
+
+              {/* Platform-Specific Files */}
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }}>
+                <h3 className="text-lg font-semibold text-white mb-3">Platform-Specific Files</h3>
+                <p className="text-slate-300 mb-4">
+                  When targeting desktop or mobile, Bini.js generates platform-specific files and configurations:
+                </p>
+                <Table 
+                  headers={['Platform', 'Generated Files', 'Purpose']}
+                  rows={[
+                    ['Web', '<code class="text-cyan-400">dist/</code>', 'Standard Vite build output'],
+                    ['Windows', '<code class="text-cyan-400">src-tauri/</code>', 'Native WebView2 binary with Authenticode signing'],
+                    ['macOS', '<code class="text-cyan-400">src-tauri/</code>', 'Native WKWebView app with Developer ID notarization'],
+                    ['Linux', '<code class="text-cyan-400">src-tauri/</code>', 'Native WebKitGTK binary as AppImage'],
+                    ['Android', '<code class="text-cyan-400">src-tauri/gen/android/</code>', 'Native APK/AAB via Tauri\'s Android backend'],
+                    ['iOS', '<code class="text-cyan-400">src-tauri/gen/ios/</code>', 'Native app via Tauri\'s iOS backend'],
+                  ]}
+                />
+                <Callout type="info">
+                  <strong>Auto-wired native APIs:</strong> <code className="text-cyan-400">bini-native</code> detects the web APIs you call and automatically wires Tauri plugins, permissions, and manifests for desktop and mobile.
+                </Callout>
               </motion.section>
 
               {/* Nested routes */}

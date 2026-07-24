@@ -98,6 +98,7 @@ function DocSidebarContent() {
   const deploymentItems = [
     { title: 'Static Export', href: '/docs/static-export' },
     { title: 'Environment Variables', href: '/docs/environment-variables' },
+    { title: 'Platforms', href: '/docs/platforms' },
     { title: 'Deploying Overview', href: '/docs/deploying' },
   ]
 
