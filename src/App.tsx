@@ -35,10 +35,10 @@ const Page22 = React.lazy(() => import('@/app/docs/linking-and-navigating'));
 // ─── Error Boundary ───────────────────────────────────────────────────────────
 
 class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
+  { children: React.ReactNode; fallback?: React.ComponentType<{ error: Error; reset: () => void }> },
   { error: Error | null }
 > {
-  constructor(props: { children: React.ReactNode }) {
+  constructor(props: { children: React.ReactNode; fallback?: React.ComponentType<{ error: Error; reset: () => void }> }) {
     super(props);
     this.state = { error: null };
   }
@@ -52,13 +52,21 @@ class ErrorBoundary extends React.Component<
   }
   override render() {
     if (this.state.error) {
+      const reset = () => this.setState({ error: null });
+      // A folder's own error.tsx (nearest boundary wins, same as
+      // not-found/loading) always takes priority over the built-in fallback,
+      // in both dev and prod.
+      if (this.props.fallback) {
+        const Fallback = this.props.fallback;
+        return <Fallback error={this.state.error} reset={reset} />;
+      }
       if (import.meta.env.DEV) return null;
       return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'system-ui,sans-serif', padding: '2rem' }}>
           <div style={{ maxWidth: 480, width: '100%', textAlign: 'center' }}>
             <h2 style={{ color: '#e74c3c', marginBottom: '1rem' }}>Something went wrong</h2>
             <pre style={{ background: '#fef2f2', padding: '1rem', borderRadius: '0.5rem', textAlign: 'left', fontSize: '0.8rem', color: '#e74c3c', overflow: 'auto' }}>{this.state.error.toString()}</pre>
-            <button onClick={() => this.setState({ error: null })} style={{ marginTop: '1rem', padding: '0.5rem 1.5rem', background: '#00CFFF', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600 }}>
+            <button onClick={reset} style={{ marginTop: '1rem', padding: '0.5rem 1.5rem', background: '#00CFFF', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600 }}>
               Try again
             </button>
           </div>

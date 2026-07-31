@@ -118,9 +118,9 @@ const WHY_BINI = [
     color: 'amber',
   },
   {
-    icon: Zap,
-    problem: 'ESLint and Prettier alone can take real time per save on a mid-size project.',
-    solution: 'Oxlint + Oxfmt — Rust-based, 50–100× faster than ESLint/Prettier, pre-configured from scaffold.',
+    icon: Globe,
+    problem: 'Each hosting platform has its own APIs, configs, and entry points.',
+    solution: 'bini-deploy generates the right configs and entry files for any platform — one command handles Netlify, Vercel, Cloudflare, Deno, Node, and native apps.',
     color: 'purple',
   },
 ]

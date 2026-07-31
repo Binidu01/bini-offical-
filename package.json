@@ -1,5 +1,5 @@
 {
-  "name": "bini-official",
+  "name": "my-bini-app",
   "type": "module",
   "version": "1.0.0",
   "scripts": {
@@ -8,35 +8,37 @@
     "export": "vite build --mode export",
     "start": "bini-server",
     "preview": "vite preview --host --open",
+    "deploy": "bini-deploy",
     "type-check": "tsc --noEmit",
     "lint": "oxlint src",
     "format": "oxfmt src",
     "check": "oxlint src && oxfmt src && tsc --noEmit"
   },
   "dependencies": {
-    "bini-overlay": "latest",
-    "bini-router": "latest",
-    "bini-server": "latest",
-    "framer-motion": "^12.42.2",
-    "hono": "latest",
-    "lucide-react": "^1.25.0",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest",
-    "simple-icons": "^16.27.0"
+    "hono": "latest",
+    "lucide-react": "^1.28.0",
+    "framer-motion": "^12.42.2",
+    "simple-icons": "^16.27.0",
+    "bini-router": "latest",
+    "bini-overlay": "latest",
+    "bini-server": "latest"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "latest",
-    "@types/node": "latest",
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "oxlint": "latest",
+    "oxfmt": "latest",
+    "bini-env": "latest",
+    "bini-deploy": "latest",
+    "bini-export": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@vitejs/plugin-react": "latest",
-    "bini-env": "latest",
-    "bini-export": "latest",
-    "oxfmt": "latest",
-    "oxlint": "latest",
+    "@types/node": "latest",
+    "typescript": "^6.0.0",
     "tailwindcss": "latest",
-    "typescript": "latest",
-    "vite": "latest"
+    "@tailwindcss/vite": "latest"
   }
 }

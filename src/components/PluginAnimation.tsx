@@ -41,14 +41,14 @@ const PluginAnimation = () => {
     };
   }, []);
 
-  const labels = ['Route', 'Server', 'Native', 'env', 'Export', 'Overlay', 'Scaffold'];
+  const labels = ['Route', 'Server', 'Native', 'env', 'Deploy', 'Overlay', 'Scaffold'];
 
   const labelMap: Record<string, string> = {
     'Route': 'bini-router',
     'Server': 'bini-server',
     'Native': 'bini-native',
     'env': 'bini-env',
-    'Export': 'bini-export',
+    'Deploy': 'bini-deploy',
     'Overlay': 'bini-overlay',
     'Scaffold': 'create-bini-app'
   };

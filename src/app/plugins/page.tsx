@@ -205,12 +205,19 @@ export default function PluginsPage() {
             <p className="text-slate-300 mb-6">
               The main package that scaffolds a complete Bini.js project.
             </p>
-            <div className="max-w-2xl">
+            <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
               <PluginCard
                 name="create-bini-app"
                 description="The Zero-Config React Framework for the Modern Web. One command to create a complete Bini.js project with routing, API routes, and deployment configuration."
                 href="https://www.npmjs.com/package/create-bini-app"
                 githubRepo="bini-cli"
+                official
+              />
+              <PluginCard
+                name="bini-deploy"
+                description="Zero-config deployment for Bini.js projects web, desktop, and mobile, all from one CLI. Generates the right hosting configuration for your target platform and pushes it straight to GitHub."
+                href="https://www.npmjs.com/package/bini-deploy"
+                githubRepo="bini-deploy"
                 official
               />
             </div>
