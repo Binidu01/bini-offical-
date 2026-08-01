@@ -34,7 +34,7 @@
     "@vitejs/plugin-react": "latest",
     "bini-deploy": "latest",
     "bini-env": "latest",
-    "bini-export": "latest",
+    "bini-export": "1.0.3",
     "oxfmt": "latest",
     "oxlint": "latest",
     "tailwindcss": "latest",

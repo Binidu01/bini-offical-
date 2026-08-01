@@ -33,7 +33,7 @@ const PAGE_URL = 'https://bini.js.org/docs/static-export'
 const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/static-export.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Code Block Component with horizontal scrollbar
+// Code Block Component
 // ────────────────────────────────────────────────────────────────────────────────
 function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   const [copied, setCopied] = React.useState(false)
@@ -144,7 +144,7 @@ export default function StaticExportPage() {
                 {/* Overview */}
                 <motion.section id="overview" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="scroll-mt-24">
                   <p className="text-slate-300 mb-6">
-                    <code className="text-cyan-400">bini-export</code> pre-renders every static route, generates the right <code className="text-cyan-400">404.html</code>, and strips all platform server files — leaving <code className="text-cyan-400">dist/</code> ready for GitHub Pages, S3, Firebase, Surge, and any other fully static host.
+                    <code className="text-cyan-400">bini-export</code> pre-renders every static route to full HTML using headless browser prerendering, generates the right <code className="text-cyan-400">404.html</code>, and strips all platform server files — leaving <code className="text-cyan-400">dist/</code> ready for GitHub Pages, S3, Firebase, Surge, and any other fully static host.
                   </p>
                   <Note>
                     <strong>Web target only.</strong> Static export applies to the Node.js/web target. Desktop and mobile builds (Windows, macOS, Linux, Android, iOS) don't use <code>bini-export</code> — they package the same routes into a native binary instead.
@@ -155,6 +155,9 @@ export default function StaticExportPage() {
                 <motion.section id="installation" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="scroll-mt-24">
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Installation</h2>
                   <CodeBlock code={`npm install -D bini-export`} />
+                  <p className="text-slate-400 text-sm mt-2">
+                    <code className="text-cyan-400">puppeteer</code> is installed automatically as a dependency for headless browser pre-rendering.
+                  </p>
                 </motion.section>
 
                 {/* Setup */}
@@ -174,12 +177,16 @@ export default defineConfig({
   plugins: [
     react(),
     ...biniroute(),
-    biniExport(),
+    biniExport({
+      ssg: true,              // Enable true SSG (default: true)
+      waitForSelector: '#root', // Wait for selector before capturing HTML (default: '#root')
+      renderTimeoutMs: 15000,  // Max time per route in ms (default: 15000)
+    }),
   ],
 })`}
                   />
                   <Note>
-                    <code>biniroute()</code> returns an array of plugins — spread it into <code>plugins</code> alongside <code>biniExport()</code>. It needs no extra options for static export; the export target is controlled by the <code>--mode export</code> build flag, not a router config value.
+                    <code>biniroute()</code> returns an array of plugins — spread it into <code>plugins</code> alongside <code>biniExport()</code>. The export target is controlled by the <code>--mode export</code> build flag.
                   </Note>
 
                   <h3 className="text-lg font-semibold text-white mt-6 mb-3">Do you need base?</h3>
@@ -235,15 +242,17 @@ export default defineConfig({
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Export Output</h2>
                   <CodeBlock
                     code={`dist/
-├── index.html
+├── index.html          ✅ Fully rendered home page
+├── 404.html            ✅ Redirect handler
 ├── about/
-│   └── index.html
-├── dashboard/
-│   └── index.html
-├── 404.html
-└── assets/
-    ├── index-*.js
-    └── index-*.css`}
+│   └── index.html      ✅ Fully rendered about page
+├── docs/
+│   ├── index.html      ✅ Fully rendered docs landing
+│   └── api-cors/
+│       └── index.html  ✅ Fully rendered nested page
+├── js/                 ✅ Hydration scripts (preserved)
+├── css/                ✅ Styles
+└── assets/             ✅ Images, fonts, etc.`}
                   />
                 </motion.section>
 
@@ -253,7 +262,10 @@ export default defineConfig({
                   <Table
                     headers={['Situation', 'What gets written to 404.html']}
                     rows={[
-                      [<code className="text-cyan-400">src/app/not-found.tsx</code>, 'exists — a copy of index.html; React Router renders your custom not-found page'],
+                      [
+                        <span><code className="text-cyan-400">src/app/not-found.tsx</code> or <code className="text-cyan-400">src/app/not-found.jsx</code></span>,
+                        <span>Copy of <code className="text-cyan-400">index.html</code> — React Router renders your custom not-found page</span>
+                      ],
                       ['No custom not-found file', 'A redirect script that saves the original URL and sends the user to the repo root, where the SPA restores it automatically'],
                     ]}
                   />
@@ -264,10 +276,31 @@ export default defineConfig({
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Options</h2>
                   <CodeBlock
                     code={`biniExport({
-  cleanPaths: ['some/generated/file.ts'], // extra files to delete (default: [])
-  mode: 'export',                         // vite --mode flag (default: 'export')
-  copy404: true,                          // write 404.html (default: true)
-  prerender: true,                        // copy index.html into each route folder (default: true)
+  // Vite mode that activates this plugin
+  mode?: string; // @default 'export'
+  
+  // Write dist/404.html
+  copy404?: boolean; // @default true
+  
+  // Enable true SSG via headless-browser prerendering
+  ssg?: boolean; // @default true
+  
+  // Routes to pre-render (auto-detected if not specified)
+  routes?: string[];
+  
+  // Selector that must exist before capturing HTML
+  waitForSelector?: string; // @default '#root'
+  
+  // Max time per route in ms
+  renderTimeoutMs?: number; // @default 15000
+  
+  // Custom Puppeteer launch options
+  puppeteerOptions?: {
+    headless?: boolean;
+    args?: string[];
+    executablePath?: string;
+    timeout?: number;
+  };
 })`}
                   />
                 </motion.section>
@@ -284,7 +317,6 @@ export default defineConfig({
                       ['Netlify', <code className="text-cyan-400">netlify/edge-functions/api.ts · api.js</code>],
                       ['Cloudflare Workers', <code className="text-cyan-400">worker.ts · worker.js</code>],
                       ['Node / Deno / Bun', <code className="text-cyan-400">server/index.ts · server/index.js</code>],
-                      ['AWS Lambda', <code className="text-cyan-400">handler.ts · handler.js</code>],
                       ['Vercel', <code className="text-cyan-400">api/index.ts · api/index.js</code>],
                     ]}
                   />
@@ -311,7 +343,7 @@ export default defineConfig({
                 <motion.section id="complete-example" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="scroll-mt-24">
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Complete Example</h2>
                   <p className="text-slate-300 mb-4">
-                    A full setup for deploying to GitHub Pages:
+                    A full setup for deploying to GitHub Pages with true SSG:
                   </p>
                   <CodeBlock
                     filename="vite.config.ts"
@@ -325,7 +357,11 @@ export default defineConfig({
   plugins: [
     react(),
     ...biniroute(),
-    biniExport(),
+    biniExport({
+      ssg: true,
+      waitForSelector: '#root',
+      renderTimeoutMs: 15000,
+    }),
   ],
 })`}
                   />
