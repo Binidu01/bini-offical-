@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { siGithub, siNpm } from 'simple-icons'
-import { Menu, X, ChevronRight, ExternalLink, Star, Command } from 'lucide-react'
+import { Menu, X, ChevronRight, ExternalLink, Star, Search } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 
 // Simple Icon component
@@ -27,74 +27,100 @@ function SimpleIcon({
   )
 }
 
-// Search suggestions data - includes exact docs structure and plugins
+// ────────────────────────────────────────────────────────────────────────────────
+// Search suggestions data — mirrors the current docs sidebar structure
+// and the corrected plugin data from /plugins
+// ────────────────────────────────────────────────────────────────────────────────
 const searchSuggestions = [
-  // Docs - Getting Started
-  { label: 'Getting Started', path: '/docs', type: 'docs', keywords: ['start', 'begin', 'intro', 'guide'] },
-  { label: 'Installation', path: '/docs/installation', type: 'docs', keywords: ['install', 'setup', 'npm', 'create'] },
+  // Docs — Getting Started
+  { label: 'Introduction', path: '/docs', type: 'docs', keywords: ['start', 'begin', 'intro', 'guide', 'overview'] },
+  { label: 'Installation', path: '/docs/installation', type: 'docs', keywords: ['install', 'setup', 'npm', 'create-bini-app'] },
   { label: 'Project Structure', path: '/docs/project-structure', type: 'docs', keywords: ['structure', 'folders', 'files', 'organization'] },
   { label: 'Layouts and Pages', path: '/docs/layouts-and-pages', type: 'docs', keywords: ['layout', 'pages', 'nested', 'structure'] },
   { label: 'Linking and Navigating', path: '/docs/linking-and-navigating', type: 'docs', keywords: ['link', 'navigation', 'router', 'navigate'] },
-  
-  // Docs - Routing
+
+  // Docs — Defining Routes
   { label: 'Folder-Based Routing', path: '/docs/folder-based-routing', type: 'docs', keywords: ['folder', 'directory', 'structure', 'routing'] },
-  { label: 'File-Based Routing', path: '/docs/file-based-routing', type: 'docs', keywords: ['file', 'pages', 'routes'] },
+  { label: 'File-Based Routing', path: '/docs/file-based-routing', type: 'docs', keywords: ['file', 'pages', 'routes', 'flat'] },
   { label: 'Dynamic Routes', path: '/docs/dynamic-routes', type: 'docs', keywords: ['dynamic', 'params', 'slug', 'id'] },
-  { label: '404 Page', path: '/docs/notfound', type: 'docs', keywords: ['404', 'not found', 'error page'] },
+  { label: 'Catch-All Routes', path: '/docs/catch-all-routes', type: 'docs', keywords: ['catch-all', 'wildcard', 'slug', 'rest'] },
+  { label: 'MDX & Markdown Pages', path: '/docs/mdx-markdown', type: 'docs', keywords: ['mdx', 'markdown', 'content', 'md'] },
+
+  // Docs — Special Files
   { label: 'Loading UI', path: '/docs/load', type: 'docs', keywords: ['loading', 'suspense', 'fallback', 'ui'] },
-  
-  // Docs - API Routes
+  { label: 'Error Boundaries', path: '/docs/error-boundaries', type: 'docs', keywords: ['error', 'boundary', 'crash', 'reset'] },
+  { label: 'Not Found (404)', path: '/docs/notfound', type: 'docs', keywords: ['404', 'not found', 'error page'] },
+
+  // Docs — Metadata
+  { label: 'Metadata & SEO', path: '/docs/metadata', type: 'docs', keywords: ['metadata', 'seo', 'title', 'description'] },
+  { label: 'Open Graph & Twitter', path: '/docs/og-twitter', type: 'docs', keywords: ['og', 'open graph', 'twitter', 'social', 'card'] },
+  { label: 'Icons & Favicons', path: '/docs/icons', type: 'docs', keywords: ['icons', 'favicon', 'apple touch', 'manifest'] },
+
+  // Docs — API Routes
   { label: 'API Routes Overview', path: '/docs/api-routes', type: 'docs', keywords: ['api', 'routes', 'endpoints', 'overview'] },
   { label: 'Plain Function Handlers', path: '/docs/api-plain', type: 'docs', keywords: ['handlers', 'functions', 'plain', 'request'] },
   { label: 'Hono Integration', path: '/docs/api-hono', type: 'docs', keywords: ['hono', 'integration', 'middleware', 'framework'] },
   { label: 'Dynamic API Routes', path: '/docs/api-dynamic', type: 'docs', keywords: ['dynamic', 'api', 'params', 'rest'] },
-  
-  // Docs - Styling
+  { label: 'CORS', path: '/docs/api-cors', type: 'docs', keywords: ['cors', 'cross-origin', 'preflight', 'headers'] },
+
+  // Docs — Environment Variables
+  { label: 'Environment Variables', path: '/docs/environment-variables', type: 'docs', keywords: ['.env', 'environment', 'variables', 'secrets'] },
+  { label: 'Prefixes & Client Exposure', path: '/docs/env-prefixes', type: 'docs', keywords: ['bini_', 'vite_', 'prefix', 'client'] },
+  { label: 'Using in API Routes', path: '/docs/env-api', type: 'docs', keywords: ['getenv', 'requireenv', 'hono context'] },
+
+  // Docs — Styling
   { label: 'CSS Overview', path: '/docs/css', type: 'docs', keywords: ['css', 'styling', 'overview', 'styles'] },
   { label: 'Tailwind CSS', path: '/docs/tailwind', type: 'docs', keywords: ['tailwind', 'css', 'utility', 'classes'] },
   { label: 'CSS Modules', path: '/docs/css-modules', type: 'docs', keywords: ['modules', 'css', 'scoped', 'styles'] },
-  
-  // Docs - Platforms
-  { label: 'Platforms', path: '/docs/platforms', type: 'docs', keywords: ['platform', 'web', 'windows', 'macos', 'linux', 'android', 'ios', 'native', 'desktop', 'mobile', 'tauri'] },
-  
-  // Docs - Deployment
-  { label: 'Static Export', path: '/docs/static-export', type: 'docs', keywords: ['static', 'export', 'spa', 'build'] },
-  { label: 'Environment Variables', path: '/docs/environment-variables', type: 'docs', keywords: ['.env', 'environment', 'variables', 'secrets'] },
-  { label: 'Deploying Overview', path: '/docs/deploying', type: 'docs', keywords: ['deploy', 'deployment', 'production', 'hosting'] },
-  
-  // Plugins - Core
-  { label: 'create-bini-app', path: '/plugins', type: 'plugin', keywords: ['create', 'bini', 'app', 'scaffold', 'framework'] },
-  
-  // Plugins - Official
-  { label: 'bini-router', path: '/plugins', type: 'plugin', keywords: ['router', 'routing', 'file-based', 'api', 'hono', 'vite'] },
-  { label: 'bini-env', path: '/plugins', type: 'plugin', keywords: ['env', 'environment', 'variables', 'secrets', 'universal'] },
-  { label: 'bini-native', path: '/plugins', type: 'plugin', keywords: ['native', 'tauri', 'plugin', 'wiring', 'rust', 'cargo', 'android', 'ios', 'desktop', 'mobile', 'api'] },
+
+  // Docs — Platforms
+  { label: 'Web', path: '/docs/platform-web', type: 'docs', keywords: ['web', 'platform', 'spa', 'browser'] },
+  { label: 'Windows', path: '/docs/platform-windows', type: 'docs', keywords: ['windows', 'desktop', 'tauri', 'webview2'] },
+  { label: 'macOS', path: '/docs/platform-macos', type: 'docs', keywords: ['macos', 'mac', 'desktop', 'tauri', 'wkwebview'] },
+  { label: 'Linux', path: '/docs/platform-linux', type: 'docs', keywords: ['linux', 'desktop', 'tauri', 'appimage', 'webkitgtk'] },
+  { label: 'Android', path: '/docs/platform-android', type: 'docs', keywords: ['android', 'mobile', 'apk', 'tauri'] },
+  { label: 'iOS', path: '/docs/platform-ios', type: 'docs', keywords: ['ios', 'mobile', 'xcode', 'tauri', 'wkwebview'] },
+
+  // Docs — Deployment
+  { label: 'Deployment Overview', path: '/docs/deploying', type: 'docs', keywords: ['deploy', 'deployment', 'production', 'hosting'] },
+  { label: 'Production Server', path: '/docs/production-server', type: 'docs', keywords: ['bini-server', 'production', 'node', 'etag'] },
+  { label: 'Static Export', path: '/docs/static-export', type: 'docs', keywords: ['static', 'export', 'spa', 'build', 'bini-export'] },
+  { label: 'Hosting Providers', path: '/docs/hosting', type: 'docs', keywords: ['bini-deploy', 'netlify', 'vercel', 'cloudflare', 'deno'] },
+
+  // Plugins — Core Framework
+  { label: 'create-bini-app', path: '/plugins', type: 'plugin', keywords: ['create', 'bini', 'app', 'scaffold', 'cli'] },
+  { label: 'bini-deploy', path: '/plugins', type: 'plugin', keywords: ['deploy', 'hosting', 'cli', 'github'] },
+
+  // Plugins — Official
+  { label: 'bini-router', path: '/plugins', type: 'plugin', keywords: ['router', 'routing', 'file-based', 'api', 'hono', 'vite', 'mdx'] },
+  { label: 'bini-env', path: '/plugins', type: 'plugin', keywords: ['env', 'environment', 'variables', 'secrets', 'getenv', 'requireenv', 'hono'] },
+  { label: 'bini-native', path: '/plugins', type: 'plugin', keywords: ['native', 'tauri', 'plugin', 'wiring', 'rust', 'cargo', 'android', 'ios', 'desktop', 'mobile'] },
   { label: 'bini-server', path: '/plugins', type: 'plugin', keywords: ['server', 'production', 'static', 'etag', 'spa'] },
   { label: 'bini-overlay', path: '/plugins', type: 'plugin', keywords: ['overlay', 'error', 'loading', 'development', 'badge'] },
   { label: 'bini-export', path: '/plugins', type: 'plugin', keywords: ['export', 'static', 'spa', 'github pages', 'pre-render'] },
-  
-  // Plugins - Vite
+
+  // Plugins — Vite
   { label: '@vitejs/plugin-react', path: '/plugins', type: 'plugin', keywords: ['react', 'fast refresh', 'vite'] },
   { label: '@tailwindcss/vite', path: '/plugins', type: 'plugin', keywords: ['tailwind', 'css', 'vite', 'styling'] },
-  
-  // Plugins - Community
+
+  // Plugins — Community
   { label: 'vite-plugin-pwa', path: '/plugins', type: 'plugin', keywords: ['pwa', 'service worker', 'offline', 'manifest'] },
   { label: 'vite-plugin-svgr', path: '/plugins', type: 'plugin', keywords: ['svg', 'react components', 'transform', 'import'] },
   { label: 'vite-plugin-compression', path: '/plugins', type: 'plugin', keywords: ['compression', 'gzip', 'brotli', 'bundle'] },
   { label: 'rollup-plugin-visualizer', path: '/plugins', type: 'plugin', keywords: ['visualizer', 'bundle', 'analysis', 'size'] },
-  
-  // Plugins - Hono Middleware
+
+  // Plugins — Hono Middleware
   { label: 'hono/cors', path: '/plugins', type: 'plugin', keywords: ['cors', 'cross-origin', 'middleware', 'hono'] },
   { label: 'hono/jwt', path: '/plugins', type: 'plugin', keywords: ['jwt', 'authentication', 'token', 'auth', 'hono'] },
   { label: 'hono/logger', path: '/plugins', type: 'plugin', keywords: ['logger', 'logging', 'requests', 'hono'] },
   { label: '@hono/zod-validator', path: '/plugins', type: 'plugin', keywords: ['zod', 'validation', 'validator', 'schema', 'hono'] },
-  
+
   // GitHub Links
-  { label: 'GitHub Repository', href: 'https://github.com/Binidu01/bini-cli', type: 'github', keywords: ['repo', 'source', 'code'] },
-  { label: 'Issues', href: 'https://github.com/Binidu01/bini-cli/issues', type: 'github', keywords: ['bugs', 'problems', 'report'] },
-  { label: 'Discussions', href: 'https://github.com/Binidu01/bini-cli/discussions', type: 'github', keywords: ['community', 'forum', 'questions'] },
-  { label: 'Contributing', href: 'https://github.com/Binidu01/bini-cli/blob/main/CONTRIBUTING.md', type: 'github', keywords: ['contribute', 'development', 'guidelines'] },
-  
+  { label: 'GitHub Repository', href: 'https://github.com/Binidu01/create-bini-app', type: 'github', keywords: ['repo', 'source', 'code'] },
+  { label: 'Issues', href: 'https://github.com/Binidu01/create-bini-app/issues', type: 'github', keywords: ['bugs', 'problems', 'report'] },
+  { label: 'Discussions', href: 'https://github.com/Binidu01/create-bini-app/discussions', type: 'github', keywords: ['community', 'forum', 'questions'] },
+  { label: 'Contributing', href: 'https://github.com/Binidu01/create-bini-app/blob/main/CONTRIBUTING.md', type: 'github', keywords: ['contribute', 'development', 'guidelines'] },
+
   // npm Package
   { label: 'npm Package', href: 'https://www.npmjs.com/package/create-bini-app', type: 'package', keywords: ['npm', 'package', 'install'] },
 ]
@@ -110,7 +136,7 @@ export const Header = () => {
   // Filter suggestions based on search query - limit to 7 results
   const filteredSuggestions = (() => {
     if (!searchQuery) return searchSuggestions.slice(0, 7)
-    
+
     const query = searchQuery.toLowerCase()
     const results = searchSuggestions.filter((suggestion) => {
       return (
@@ -119,7 +145,7 @@ export const Header = () => {
         suggestion.keywords?.some(keyword => keyword.toLowerCase().includes(query))
       )
     })
-    
+
     return results.slice(0, 7)
   })()
 
@@ -229,15 +255,15 @@ export const Header = () => {
                 {[
                   { label: 'Docs', path: '/docs' },
                   { label: 'Plugins', path: '/plugins' },
-                  { 
-                    label: 'Examples', 
+                  {
+                    label: 'Examples',
                     href: 'https://github.com/Binidu01/bini-examples',
-                    external: true 
+                    external: true
                   },
-                  { 
-                    label: 'Releases', 
-                    href: 'https://github.com/Binidu01/bini-cli/releases',
-                    external: true 
+                  {
+                    label: 'Releases',
+                    href: 'https://github.com/Binidu01/create-bini-app/releases',
+                    external: true
                   },
                 ].map((item) => (
                   item.external ? (
@@ -264,20 +290,22 @@ export const Header = () => {
               </nav>
             </div>
 
+            {/* Search bar (center-right, input-styled) */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="hidden sm:flex items-center justify-between gap-6 lg:gap-10 w-48 md:w-56 lg:w-64 px-3 py-1.5 text-sm text-slate-500 hover:text-slate-400 bg-[#0c0c0e] hover:bg-[#111113] border border-slate-800 rounded-lg transition-colors"
+            >
+              <span className="flex items-center gap-2 truncate">
+                <Search size={15} className="shrink-0 text-slate-500" />
+                <span className="truncate">Search documentation...</span>
+              </span>
+              <kbd className="shrink-0 px-1.5 py-0.5 text-[11px] font-semibold text-slate-300 bg-black rounded-md border border-slate-700">
+                Ctrl K
+              </kbd>
+            </button>
+
             {/* Right side actions */}
             <div className="flex items-center gap-2">
-              {/* Search button */}
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900 border border-slate-800"
-              >
-                <Command size={16} />
-                <span className="hidden lg:inline">Ctrl K</span>
-                <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs font-mono text-slate-400 bg-slate-900 rounded border border-slate-700">
-                  <span className="text-xs">⌘</span>K
-                </kbd>
-              </button>
-
               {/* npm - desktop */}
               <a
                 href="https://www.npmjs.com/package/create-bini-app"
@@ -291,7 +319,7 @@ export const Header = () => {
 
               {/* GitHub stars - desktop */}
               <a
-                href="https://github.com/Binidu01/bini-cli"
+                href="https://github.com/Binidu01/create-bini-app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900 border border-slate-800"
@@ -300,9 +328,18 @@ export const Header = () => {
                 <span>Star us on GitHub</span>
               </a>
 
+              {/* Search icon only - mobile */}
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="sm:hidden p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900"
+                aria-label="Search"
+              >
+                <Search size={18} />
+              </button>
+
               {/* GitHub icon only - mobile */}
               <a
-                href="https://github.com/Binidu01/bini-cli"
+                href="https://github.com/Binidu01/create-bini-app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="sm:hidden p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900"
@@ -343,35 +380,35 @@ export const Header = () => {
             className="lg:hidden border-t border-slate-800 bg-black"
           >
             <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
-              {/* Mobile search button */}
+              {/* Mobile search bar */}
               <button
                 onClick={() => {
                   setSearchOpen(true)
                   setMobileMenuOpen(false)
                 }}
-                className="flex items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900 rounded-lg transition-colors mb-2"
+                className="flex items-center justify-between gap-3 px-3 py-2.5 mb-2 text-sm text-slate-500 hover:text-slate-400 bg-[#0c0c0e] hover:bg-[#111113] border border-slate-800 rounded-lg transition-colors"
               >
                 <span className="flex items-center gap-2">
-                  <Command size={16} />
-                  Ctrl K
+                  <Search size={15} className="shrink-0 text-slate-500" />
+                  Search documentation...
                 </span>
-                <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-xs font-mono text-slate-400 bg-slate-900 rounded border border-slate-700">
-                  ⌘K
+                <kbd className="shrink-0 px-1.5 py-0.5 text-[11px] font-semibold text-slate-300 bg-black rounded-md border border-slate-700">
+                  Ctrl K
                 </kbd>
               </button>
 
               {[
                 { label: 'Docs', path: '/docs' },
                 { label: 'Plugins', path: '/plugins' },
-                { 
-                  label: 'Examples', 
+                {
+                  label: 'Examples',
                   href: 'https://github.com/Binidu01/bini-examples',
-                  external: true 
+                  external: true
                 },
-                { 
-                  label: 'Releases', 
-                  href: 'https://github.com/Binidu01/bini-cli/releases',
-                  external: true 
+                {
+                  label: 'Releases',
+                  href: 'https://github.com/Binidu01/create-bini-app/releases',
+                  external: true
                 },
               ].map((item) => (
                 item.external ? (
@@ -398,10 +435,10 @@ export const Header = () => {
                   </Link>
                 )
               ))}
-              
+
               {/* Mobile GitHub star */}
               <a
-                href="https://github.com/Binidu01/bini-cli"
+                href="https://github.com/Binidu01/create-bini-app"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMobileMenuOpen(false)}
@@ -437,14 +474,14 @@ export const Header = () => {
                 className="w-full max-w-lg transform overflow-hidden rounded-xl bg-black border border-slate-800 shadow-2xl"
               >
                 <div className="relative">
-                  <Command
+                  <Search
                     size={18}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
                   />
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Search docs, plugins..."
+                    placeholder="Search documentation..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={handleSearchKeyDown}
@@ -541,7 +578,7 @@ export const Footer = () => {
             </p>
             <div className="flex items-center gap-1">
               <a
-                href="https://github.com/Binidu01/bini-cli"
+                href="https://github.com/Binidu01/create-bini-app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-900"
@@ -569,7 +606,7 @@ export const Footer = () => {
                 { label: 'Documentation', path: '/docs' },
                 { label: 'Plugins', path: '/plugins' },
                 { label: 'Examples', href: 'https://github.com/Binidu01/bini-examples', external: true },
-                { label: 'Releases', href: 'https://github.com/Binidu01/bini-cli/releases', external: true },
+                { label: 'Releases', href: 'https://github.com/Binidu01/create-bini-app/releases', external: true },
               ].map((item) => (
                 <li key={item.label}>
                   {item.external ? (
@@ -600,8 +637,8 @@ export const Footer = () => {
             <h3 className="text-sm font-semibold text-white mb-4">Community</h3>
             <ul className="space-y-3">
               {[
-                { label: 'GitHub Discussions', href: 'https://github.com/Binidu01/bini-cli/discussions' },
-                { label: 'Contributing', href: 'https://github.com/Binidu01/bini-cli/blob/main/CONTRIBUTING.md' },
+                { label: 'GitHub Discussions', href: 'https://github.com/Binidu01/create-bini-app/discussions' },
+                { label: 'Contributing', href: 'https://github.com/Binidu01/create-bini-app/blob/main/CONTRIBUTING.md' },
               ].map((item) => (
                 <li key={item.label}>
                   <a
@@ -624,9 +661,9 @@ export const Footer = () => {
             <ul className="space-y-3">
               {[
                 { label: 'npm', href: 'https://www.npmjs.com/package/create-bini-app' },
-                { label: 'GitHub', href: 'https://github.com/Binidu01/bini-cli' },
-                { label: 'Issues', href: 'https://github.com/Binidu01/bini-cli/issues' },
-                { label: 'License', href: 'https://github.com/Binidu01/bini-cli/blob/main/LICENSE' },
+                { label: 'GitHub', href: 'https://github.com/Binidu01/create-bini-app' },
+                { label: 'Issues', href: 'https://github.com/Binidu01/create-bini-app/issues' },
+                { label: 'License', href: 'https://github.com/Binidu01/create-bini-app/blob/main/LICENSE' },
               ].map((item) => (
                 <li key={item.label}>
                   <a
@@ -661,7 +698,7 @@ export const Footer = () => {
             </a>
             {' '}and{' '}
             <a
-              href="https://github.com/Binidu01/bini-cli/graphs/contributors"
+              href="https://github.com/Binidu01/create-bini-app/graphs/contributors"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:text-cyan-300 transition-colors"

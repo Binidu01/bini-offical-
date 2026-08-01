@@ -28,7 +28,7 @@
   },
   "include": [
     "src"
-  ],
+, "../new.js"  ],
   "exclude": [
     "node_modules",
     "dist"

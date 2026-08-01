@@ -13,24 +13,40 @@ const Page1 = React.lazy(() => import('@/app/docs/page'));
 const Page2 = React.lazy(() => import('@/app/plugins/page'));
 const Page3 = React.lazy(() => import('@/app/docs/css'));
 const Page4 = React.lazy(() => import('@/app/docs/load'));
-const Page5 = React.lazy(() => import('@/app/docs/api-hono'));
-const Page6 = React.lazy(() => import('@/app/docs/notfound'));
-const Page7 = React.lazy(() => import('@/app/docs/tailwind'));
-const Page8 = React.lazy(() => import('@/app/docs/api-plain'));
-const Page9 = React.lazy(() => import('@/app/docs/deploying'));
-const Page10 = React.lazy(() => import('@/app/docs/platforms'));
-const Page11 = React.lazy(() => import('@/app/docs/api-routes'));
-const Page12 = React.lazy(() => import('@/app/docs/api-dynamic'));
-const Page13 = React.lazy(() => import('@/app/docs/css-modules'));
-const Page14 = React.lazy(() => import('@/app/docs/installation'));
-const Page15 = React.lazy(() => import('@/app/docs/static-export'));
-const Page16 = React.lazy(() => import('@/app/docs/dynamic-routes'));
-const Page17 = React.lazy(() => import('@/app/docs/layouts-and-pages'));
-const Page18 = React.lazy(() => import('@/app/docs/project-structure'));
-const Page19 = React.lazy(() => import('@/app/docs/file-based-routing'));
-const Page20 = React.lazy(() => import('@/app/docs/folder-based-routing'));
-const Page21 = React.lazy(() => import('@/app/docs/environment-variables'));
-const Page22 = React.lazy(() => import('@/app/docs/linking-and-navigating'));
+const Page5 = React.lazy(() => import('@/app/docs/icons'));
+const Page6 = React.lazy(() => import('@/app/docs/env-api'));
+const Page7 = React.lazy(() => import('@/app/docs/hosting'));
+const Page8 = React.lazy(() => import('@/app/docs/api-cors'));
+const Page9 = React.lazy(() => import('@/app/docs/api-hono'));
+const Page10 = React.lazy(() => import('@/app/docs/metadata'));
+const Page11 = React.lazy(() => import('@/app/docs/notfound'));
+const Page12 = React.lazy(() => import('@/app/docs/tailwind'));
+const Page13 = React.lazy(() => import('@/app/docs/api-plain'));
+const Page14 = React.lazy(() => import('@/app/docs/deploying'));
+const Page15 = React.lazy(() => import('@/app/docs/api-routes'));
+const Page16 = React.lazy(() => import('@/app/docs/og-twitter'));
+const Page17 = React.lazy(() => import('@/app/docs/api-dynamic'));
+const Page18 = React.lazy(() => import('@/app/docs/css-modules'));
+const Page19 = React.lazy(() => import('@/app/docs/env-prefixes'));
+const Page20 = React.lazy(() => import('@/app/docs/installation'));
+const Page21 = React.lazy(() => import('@/app/docs/mdx-markdown'));
+const Page22 = React.lazy(() => import('@/app/docs/platform-ios'));
+const Page23 = React.lazy(() => import('@/app/docs/platform-web'));
+const Page24 = React.lazy(() => import('@/app/docs/static-export'));
+const Page25 = React.lazy(() => import('@/app/docs/dynamic-routes'));
+const Page26 = React.lazy(() => import('@/app/docs/platform-linux'));
+const Page27 = React.lazy(() => import('@/app/docs/platform-macos'));
+const Page28 = React.lazy(() => import('@/app/docs/catch-all-routes'));
+const Page29 = React.lazy(() => import('@/app/docs/error-boundaries'));
+const Page30 = React.lazy(() => import('@/app/docs/platform-android'));
+const Page31 = React.lazy(() => import('@/app/docs/platform-windows'));
+const Page32 = React.lazy(() => import('@/app/docs/layouts-and-pages'));
+const Page33 = React.lazy(() => import('@/app/docs/production-server'));
+const Page34 = React.lazy(() => import('@/app/docs/project-structure'));
+const Page35 = React.lazy(() => import('@/app/docs/file-based-routing'));
+const Page36 = React.lazy(() => import('@/app/docs/folder-based-routing'));
+const Page37 = React.lazy(() => import('@/app/docs/environment-variables'));
+const Page38 = React.lazy(() => import('@/app/docs/linking-and-navigating'));
 
 // ─── Error Boundary ───────────────────────────────────────────────────────────
 
@@ -284,24 +300,40 @@ export default function App() {
           <Route path="/plugins" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page2 /></ErrorBoundary></Suspense>} />
           <Route path="/docs/css" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page3 /></ErrorBoundary></Suspense>} />
           <Route path="/docs/load" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page4 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/api-hono" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page5 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/notfound" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page6 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/tailwind" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page7 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/api-plain" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page8 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/deploying" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page9 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/platforms" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page10 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/api-routes" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page11 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/api-dynamic" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page12 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/css-modules" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page13 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/installation" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page14 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/static-export" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page15 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/dynamic-routes" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page16 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/layouts-and-pages" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page17 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/project-structure" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page18 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/file-based-routing" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page19 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/folder-based-routing" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page20 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/environment-variables" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page21 /></ErrorBoundary></Suspense>} />
-          <Route path="/docs/linking-and-navigating" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page22 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/icons" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page5 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/env-api" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page6 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/hosting" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page7 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/api-cors" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page8 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/api-hono" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page9 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/metadata" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page10 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/notfound" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page11 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/tailwind" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page12 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/api-plain" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page13 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/deploying" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page14 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/api-routes" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page15 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/og-twitter" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page16 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/api-dynamic" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page17 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/css-modules" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page18 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/env-prefixes" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page19 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/installation" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page20 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/mdx-markdown" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page21 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/platform-ios" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page22 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/platform-web" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page23 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/static-export" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page24 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/dynamic-routes" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page25 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/platform-linux" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page26 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/platform-macos" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page27 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/catch-all-routes" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page28 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/error-boundaries" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page29 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/platform-android" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page30 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/platform-windows" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page31 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/layouts-and-pages" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page32 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/production-server" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page33 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/project-structure" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page34 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/file-based-routing" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page35 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/folder-based-routing" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page36 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/environment-variables" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page37 /></ErrorBoundary></Suspense>} />
+          <Route path="/docs/linking-and-navigating" element={<Suspense fallback={<Spinner />}><ErrorBoundary><Page38 /></ErrorBoundary></Suspense>} />
         </Route>
         <Route path="*" element={<Default404 />} />
       </Routes>

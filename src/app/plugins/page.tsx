@@ -1,10 +1,7 @@
 // src/app/plugins/page.tsx
 import React from 'react'
 import { motion } from 'framer-motion'
-import {
-  Info,
-  ExternalLink,
-} from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header, Footer } from '../../components/Layout'
 import {
@@ -14,14 +11,14 @@ import {
 import type { SimpleIcon as SimpleIconType } from 'simple-icons'
 
 // Simple Icon component
-function SimpleIcon({ 
-  icon, 
-  className = "", 
-  size = 14 
-}: { 
+function SimpleIcon({
+  icon,
+  className = "",
+  size = 14
+}: {
   icon: SimpleIconType
   className?: string
-  size?: number 
+  size?: number
 }) {
   return (
     <svg
@@ -37,24 +34,53 @@ function SimpleIcon({
 }
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Callout Component
+// Code Block Component with copy button + horizontal scrollbar
+// (matches the shared component used across /docs pages)
 // ────────────────────────────────────────────────────────────────────────────────
-function Callout({ type, children }: { type: 'info' | 'note'; children: React.ReactNode }) {
-  const styles = {
-    info: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', color: 'text-cyan-400' },
-    note: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', color: 'text-amber-400' },
+function CodeBlock({ code, filename }: { code: string; filename?: string }) {
+  const [copied, setCopied] = React.useState(false)
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
-  const style = styles[type]
 
   return (
-    <div className={`p-4 rounded-lg ${style.bg} border ${style.border} my-6`}>
-      <div className="flex items-center gap-2 mb-1">
-        <Info className={`w-4 h-4 ${style.color}`} />
-        <p className={`text-sm font-medium uppercase ${style.color}`}>
-          {type === 'info' ? 'Note' : 'Note'}
-        </p>
+    <div className="relative group mb-6">
+      {filename && (
+        <div className="flex items-center justify-between px-4 py-2 bg-slate-900 border border-slate-800 border-b-0 rounded-t-lg">
+          <span className="text-sm text-slate-300 font-mono">{filename}</span>
+        </div>
+      )}
+      <button onClick={handleCopy} className="absolute top-2 right-2 p-1.5 rounded-md bg-slate-800 hover:bg-slate-700 transition-colors z-10 opacity-0 group-hover:opacity-100" style={{ top: filename ? '3rem' : '0.5rem' }}>
+        {copied ? (
+          <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        ) : (
+          <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        )}
+      </button>
+      <div className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent hover:scrollbar-thumb-slate-500`}>
+        <pre className="p-4 min-w-max">
+          <code className="text-sm font-mono text-slate-200 whitespace-pre">{code}</code>
+        </pre>
       </div>
-      <div className="text-sm text-slate-300 [&>strong]:text-white [&>code]:text-cyan-400 [&>code]:bg-slate-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded">{children}</div>
+    </div>
+  )
+}
+
+// ────────────────────────────────────────────────────────────────────────────────
+// Note Component (matches the shared component used across /docs pages)
+// ────────────────────────────────────────────────────────────────────────────────
+function Note({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4 my-6">
+      <div className="text-sm text-slate-300 [&>strong]:text-white [&>code]:text-cyan-400 [&>code]:bg-slate-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded">
+        {children}
+      </div>
     </div>
   )
 }
@@ -62,13 +88,13 @@ function Callout({ type, children }: { type: 'info' | 'note'; children: React.Re
 // ────────────────────────────────────────────────────────────────────────────────
 // Plugin Card Component (for Bini.js official packages)
 // ────────────────────────────────────────────────────────────────────────────────
-function PluginCard({ 
-  name, 
-  description, 
+function PluginCard({
+  name,
+  description,
   href,
   githubRepo,
   official = false,
-}: { 
+}: {
   name: string
   description: string
   href?: string
@@ -90,9 +116,9 @@ function PluginCard({
       </div>
       <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
         {href && (
-          <a 
-            href={href} 
-            target="_blank" 
+          <a
+            href={href}
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
           >
@@ -102,9 +128,9 @@ function PluginCard({
           </a>
         )}
         {githubRepo && (
-          <a 
+          <a
             href={`https://github.com/Binidu01/${githubRepo}`}
-            target="_blank" 
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors"
           >
@@ -121,11 +147,11 @@ function PluginCard({
 // ────────────────────────────────────────────────────────────────────────────────
 // Community Card Component (npm only)
 // ────────────────────────────────────────────────────────────────────────────────
-function CommunityCard({ 
-  name, 
-  description, 
+function CommunityCard({
+  name,
+  description,
   npmUrl,
-}: { 
+}: {
   name: string
   description: string
   npmUrl?: string
@@ -138,9 +164,9 @@ function CommunityCard({
       </div>
       {npmUrl && (
         <div className="mt-4 pt-3 border-t border-slate-800">
-          <a 
-            href={npmUrl} 
-            target="_blank" 
+          <a
+            href={npmUrl}
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
           >
@@ -183,39 +209,39 @@ export default function PluginsPage() {
 
       <div className="relative pt-24 lg:pt-28 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Plugins & Packages</h1>
             <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-              The complete Bini.js ecosystem — everything you need to build modern web applications.
+              The complete Bini.js ecosystem — everything you need to build full-stack React apps for web, desktop, and mobile from one codebase.
             </p>
           </motion.div>
 
           {/* Note */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Callout type="note">
-              Bini.js is built on Vite and aims to provide out-of-the-box support for common web development patterns. 
-              Before searching for a plugin, check out the <Link to="/docs" className="text-cyan-400 hover:underline">documentation</Link>. 
-              Many cases where a plugin would be needed in other projects are already covered in Bini.js by default.
-            </Callout>
+            <Note>
+              Bini.js is built on Vite and aims to provide out-of-the-box support for common web development patterns.
+              Before searching for a plugin, check out the <Link to="/docs" className="text-cyan-400 hover:underline">documentation</Link>.
+              Many cases where a plugin would be needed in other projects — routing, API routes, env handling, native app wiring — are already covered by the official Bini.js packages below.
+            </Note>
           </motion.div>
 
           {/* Core Framework */}
           <Section title="Core Framework">
             <p className="text-slate-300 mb-6">
-              The main package that scaffolds a complete Bini.js project.
+              The two packages that scaffold and ship a Bini.js project.
             </p>
             <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
               <PluginCard
                 name="create-bini-app"
-                description="The Zero-Config React Framework for the Modern Web. One command to create a complete Bini.js project with routing, API routes, and deployment configuration."
+                description="Build full-stack React apps for web, desktop, and mobile — from one codebase. Scaffolds a complete Vite + React + Hono project with file-based routing, API routes, Tauri native builds, and a deploy script wired in from the first commit."
                 href="https://www.npmjs.com/package/create-bini-app"
-                githubRepo="bini-cli"
+                githubRepo="create-bini-app"
                 official
               />
               <PluginCard
                 name="bini-deploy"
-                description="Zero-config deployment for Bini.js projects web, desktop, and mobile, all from one CLI. Generates the right hosting configuration for your target platform and pushes it straight to GitHub."
+                description="Zero-config deployment for Bini.js projects — web, desktop, and mobile, all from one CLI. Scans your project, generates the right hosting configuration for your target platform, and pushes it straight to GitHub."
                 href="https://www.npmjs.com/package/bini-deploy"
                 githubRepo="bini-deploy"
                 official
@@ -231,42 +257,42 @@ export default function PluginsPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <PluginCard
                 name="bini-router"
-                description="File-based routing, nested layouts, auto-imports, and Hono-powered API routes for Vite + React. The heart of Bini.js routing."
+                description="File-based routing, nested layouts, folder-scoped loading/error/404 boundaries, MDX & Markdown pages, and Hono-powered API routes for Vite. Like Next.js App Router, but pure SPA — zero server required."
                 href="https://www.npmjs.com/package/bini-router"
                 githubRepo="bini-router"
                 official
               />
               <PluginCard
                 name="bini-env"
-                description="Universal environment variable loader and Vite plugin. Works in Node.js, Deno, Bun, and Vite edge functions without leaking secrets."
+                description="Hono-native environment variable system. getEnv(c, key) and requireEnv(c, key) read from the Hono request context, so variables resolve correctly on Node.js, Bun, Deno, Vercel Edge, Netlify Edge, and Cloudflare Workers — with zero dotenv parsing at runtime."
                 href="https://www.npmjs.com/package/bini-env"
                 githubRepo="bini-env"
                 official
               />
               <PluginCard
                 name="bini-native"
-                description="Automatic Tauri plugin wiring for desktop and mobile. Detects the web APIs you call and wires Rust plugins, Cargo.toml, capabilities, and Android/iOS manifests — dev-only, build stays untouched."
+                description="Automatic Tauri plugin wiring for desktop and mobile. Detects the web APIs you call — geolocation, clipboard, notifications, dialogs, and more — and wires Rust plugins, Cargo.toml, capabilities, and Android/iOS manifests. Dev-only; tauri build stays a complete no-op."
                 href="https://www.npmjs.com/package/bini-native"
                 githubRepo="bini-native"
                 official
               />
               <PluginCard
                 name="bini-server"
-                description="Zero-dependency production server for bini-router apps. Serves static files, handles API routes, and provides SPA fallback with ETag support."
+                description="Zero-dependency, secure-by-default production server for bini-router apps. Streams static files with ETag caching, serves /api/* routes, provides SPA fallback, and adds configurable body/handler timeouts and graceful shutdown."
                 href="https://www.npmjs.com/package/bini-server"
                 githubRepo="bini-server"
                 official
               />
               <PluginCard
                 name="bini-overlay"
-                description="Next.js-style error overlay and animated loading badge. Shows Bini.js logo during development and morphs into a full error panel."
+                description="A Next.js-style error overlay and animated loading badge. Shows your Bini.js logo during development — animates on load and HMR updates, morphs into a clickable error pill on failure, and opens a full panel with stack trace and code frame."
                 href="https://www.npmjs.com/package/bini-overlay"
                 githubRepo="bini-overlay"
                 official
               />
               <PluginCard
                 name="bini-export"
-                description="Static SPA export for bini-router. Pre-renders routes, generates 404.html, and strips platform files for GitHub Pages and other fully static hosts."
+                description="Pure static SPA export for bini-router projects. Pre-renders every static route, generates the right 404.html, and strips platform server files — leaving dist/ ready for GitHub Pages, S3, Firebase, Surge, and any other static host."
                 href="https://www.npmjs.com/package/bini-export"
                 githubRepo="bini-export"
                 official
@@ -277,26 +303,27 @@ export default function PluginsPage() {
           {/* Built-in Vite Plugins */}
           <Section title="Built-in Vite Plugins">
             <p className="text-slate-300 mb-4">
-              Plugins are added in <code className="text-cyan-400">vite.config.ts</code> under the <code className="text-cyan-400">plugins</code> array:
+              Plugins are added in <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">vite.config.ts</code> under the <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">plugins</code> array:
             </p>
-            <pre className="bg-[#0a0a0a] border border-slate-700 rounded-lg p-4 overflow-x-auto mb-6">
-              <code className="text-sm font-mono text-slate-200">
-{`// vite.config.ts
-import { defineConfig } from 'vite'
+            <CodeBlock
+              filename="vite.config.ts"
+              code={`import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { biniroute } from 'bini-router'
 import { biniEnv } from 'bini-env'
 
 export default defineConfig({
   plugins: [
-    react(),           // React Fast Refresh
-    biniEnv(),         // Environment variables
-    biniroute(),       // File-based routing & API routes
+    react(),      // React Fast Refresh
+    biniEnv(),    // Environment variable prefixes + dev banner
+    ...biniroute(), // File-based routing, MDX compiler & API routes
     // Add more plugins here
   ],
 })`}
-              </code>
-            </pre>
+            />
+            <Note>
+              <code>biniroute()</code> returns an <strong className="text-white">array</strong> of plugins — the router plugin plus the bundled MDX compiler — so it must be spread with <code>...biniroute()</code>, not added as a single item.
+            </Note>
             <p className="text-slate-300 mb-6">
               These Vite plugins are automatically included based on your project configuration:
             </p>
@@ -341,24 +368,24 @@ export default defineConfig({
                 npmUrl="https://www.npmjs.com/package/rollup-plugin-visualizer"
               />
             </div>
-            <Callout type="info">
+            <Note>
               <strong>Most Vite plugins work with Bini.js.</strong> Check the{' '}
               <a href="https://github.com/vitejs/awesome-vite#plugins" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline inline-flex items-center gap-1">
                 Awesome Vite <ExternalLink className="w-3 h-3" />
               </a>{' '}
               list for more community plugins.
-            </Callout>
+            </Note>
           </Section>
 
           {/* Hono Middleware & Plugins */}
           <Section title="Hono Middleware & Plugins">
             <p className="text-slate-300 mb-6">
-              Bini.js uses Hono for API routes. You can use any Hono middleware in your <code className="text-cyan-400">src/app/api/</code> files.
+              Bini.js uses Hono for API routes. You can use any Hono middleware in your <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">src/app/api/</code> files.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <CommunityCard
                 name="hono/cors"
-                description="Cross-Origin Resource Sharing middleware for Hono. Enable CORS for your API routes."
+                description="Cross-Origin Resource Sharing middleware for Hono. bini-router and bini-server already enable permissive CORS by default — use this when you need finer-grained control."
                 npmUrl="https://www.npmjs.com/package/hono"
               />
               <CommunityCard
@@ -377,36 +404,43 @@ export default defineConfig({
                 npmUrl="https://www.npmjs.com/package/@hono/zod-validator"
               />
             </div>
-            <Callout type="info">
+            <Note>
               <strong>All Hono middleware works in Bini.js API routes.</strong> Import them directly from <code>hono</code> or install additional packages like{' '}
               <code>@hono/zod-validator</code>. See the{' '}
               <a href="https://hono.dev/docs/middleware/builtin/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline inline-flex items-center gap-1">
                 Hono middleware documentation <ExternalLink className="w-3 h-3" />
               </a>{' '}
               for the complete list.
-            </Callout>
-            <p className="text-slate-300 mt-4">
-              Example of using Hono middleware in an API route:
+            </Note>
+            <p className="text-slate-300 mt-4 mb-4">
+              Example of using Hono middleware together with <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">bini-env</code> in an API route:
             </p>
-            <pre className="bg-[#0a0a0a] border border-slate-700 rounded-lg p-4 overflow-x-auto mt-4">
-              <code className="text-sm font-mono text-slate-200">
-{`// src/app/api/secure.ts
-import { Hono } from 'hono'
+            <CodeBlock
+              filename="src/app/api/secure.ts"
+              code={`import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { jwt } from 'hono/jwt'
 import { logger } from 'hono/logger'
+import { getEnv, requireEnv } from 'bini-env'
 
 const app = new Hono()
 
 app.use('*', cors())
 app.use('*', logger())
-app.use('/admin/*', jwt({ secret: process.env.JWT_SECRET! }))
 
-app.get('/', (c) => c.json({ message: 'API with middleware' }))
+app.get('/', async (c) => {
+  const ctx = c as any
+
+  // requireEnv throws if the var is missing — fail fast on required config
+  const apiKey = requireEnv(ctx, 'API_SECRET')
+
+  // getEnv returns undefined if missing — use ?? for a default
+  const appName = getEnv(ctx, 'APP_NAME') ?? 'Bini.js'
+
+  return c.json({ message: \`API with middleware, \${appName}\` })
+})
 
 export default app`}
-              </code>
-            </pre>
+            />
           </Section>
 
         </div>

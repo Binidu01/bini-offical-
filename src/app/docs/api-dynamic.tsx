@@ -4,20 +4,43 @@ import { motion } from 'framer-motion'
 import {
   ArrowLeft,
   ArrowRight,
-  AlertTriangle,
-  Info,
-  Lightbulb,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
 import { DocLayout } from '../../components/DocSidebar'
+import { CopyPageButton } from '../../components/CopyPageButton'
+import { TableOfContents, type TocItem } from '../../components/TableOfContents'
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Code Block Component
+// "On this page" entries
+// ────────────────────────────────────────────────────────────────────────────────
+const TOC_ITEMS: TocItem[] = [
+  { id: 'file-structure', label: 'File Structure' },
+  { id: 'single-parameter', label: 'Single Dynamic Parameter' },
+  { id: 'multiple-parameters', label: 'Multiple Dynamic Parameters' },
+  { id: 'catch-all-routes', label: 'Catch-all Routes' },
+  { id: 'optional-catch-all', label: 'Optional Catch-all' },
+  { id: 'nested-dynamic', label: 'Nested Dynamic Routes' },
+  { id: 'query-parameters', label: 'Query Parameters' },
+  { id: 'route-priority', label: 'Route Priority' },
+  { id: 'complete-example', label: 'Complete Example' },
+]
+
+const PAGE_TITLE = 'Dynamic API Routes'
+const PAGE_URL = 'https://bini.js.org/docs/api-dynamic'
+const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/api-dynamic/page.tsx'
+
+// ────────────────────────────────────────────────────────────────────────────────
+// Code Block Component with horizontal scrollbar
 // ────────────────────────────────────────────────────────────────────────────────
 function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   const [copied, setCopied] = React.useState(false)
-  const handleCopy = () => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000) }
+  const handleCopy = () => { 
+    const cleanCode = code.replace(/\$ /g, '')
+    navigator.clipboard.writeText(cleanCode)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000) 
+  }
 
   return (
     <div className="relative group mb-6">
@@ -37,9 +60,11 @@ function CodeBlock({ code, filename }: { code: string; filename?: string }) {
           </svg>
         )}
       </button>
-      <pre className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} p-4 overflow-x-auto`}>
-        <code className="text-sm font-mono text-slate-200">{code}</code>
-      </pre>
+      <div className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent hover:scrollbar-thumb-slate-500`}>
+        <pre className="p-4 min-w-max">
+          <code className="text-sm font-mono text-slate-200 whitespace-pre">{code}</code>
+        </pre>
+      </div>
     </div>
   )
 }
@@ -63,25 +88,11 @@ function Table({ headers, rows }: { headers: string[]; rows: React.ReactNode[][]
 }
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Callout Component
+// Note Component
 // ────────────────────────────────────────────────────────────────────────────────
-function Callout({ type, children }: { type: 'info' | 'warning' | 'tip'; children: React.ReactNode }) {
-  const styles = {
-    info: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', color: 'text-cyan-400', icon: Info },
-    warning: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', color: 'text-amber-400', icon: AlertTriangle },
-    tip: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', color: 'text-purple-400', icon: Lightbulb },
-  }
-  const style = styles[type]
-  const Icon = style.icon
-
+function Note({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`p-4 rounded-lg ${style.bg} border ${style.border} my-6`}>
-      <div className="flex items-center gap-2 mb-1">
-        <Icon className={`w-4 h-4 ${style.color}`} />
-        <p className={`text-sm font-medium ${style.color}`}>
-          {type === 'info' ? 'Note' : type === 'warning' ? 'Warning' : 'Tip'}
-        </p>
-      </div>
+    <div className="p-4 rounded-lg bg-slate-900/50 border border-slate-800 my-6">
       <div className="text-sm text-slate-300 [&>strong]:text-white [&>code]:text-cyan-400 [&>code]:bg-slate-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded">{children}</div>
     </div>
   )
@@ -104,33 +115,47 @@ export default function ApiDynamicPage() {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 overflow-x-hidden">
           
           <DocLayout>
-            <div className="max-w-4xl">
-              
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <h1 className="text-4xl font-bold text-white mb-2">Dynamic API Routes</h1>
-                <p className="text-slate-400 text-sm mb-8">
-                  Learn how to create dynamic API endpoints with path parameters, catch-all routes, and optional segments.
-                </p>
-              </motion.div>
+            <div className="flex gap-10 xl:gap-14">
+              {/* Main content column */}
+              <div className="max-w-4xl min-w-0 flex-1">
 
-              {/* Overview */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                <p className="text-slate-300 mb-6">
-                  Dynamic API routes allow you to create endpoints that match patterns rather than exact paths. Use square brackets in your file names to define dynamic segments — the file path determines the route.
-                </p>
-                <Callout type="info">
-                  <strong>File-based routing:</strong> Like all Bini.js API routes, dynamic routes follow file-based routing. There are no root <code>/</code> API routes — the filename becomes the route segment. Write your Hono routes <strong>without</strong> the <code>/api</code> prefix.
-                </Callout>
-              </motion.section>
+                {/* Title + Copy page button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start justify-between gap-4 mb-4"
+                >
+                  <div>
+                    <h1 className="text-4xl font-bold text-white mb-2">{PAGE_TITLE}</h1>
+                    <p className="text-slate-400 text-sm">Learn how to create dynamic API endpoints with path parameters, catch-all routes, and optional segments.</p>
+                  </div>
+                  <div className="shrink-0 pt-2 hidden sm:block">
+                    <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
+                  </div>
+                </motion.div>
+                {/* Copy button on small screens */}
+                <div className="sm:hidden mb-8">
+                  <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
+                </div>
 
-              {/* File Structure */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">File Structure</h2>
-                <p className="text-slate-300 mb-4">
-                  Dynamic segments are created using square brackets in file or folder names:
-                </p>
-                <CodeBlock 
-                  code={`src/app/api/
+                {/* Overview */}
+                <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                  <p className="text-slate-300 mb-6">
+                    Dynamic API routes allow you to create endpoints that match patterns rather than exact paths. Use square brackets in your file names to define dynamic segments — the file path determines the route.
+                  </p>
+                  <Note>
+                    <strong>File-based routing:</strong> Like all Bini.js API routes, dynamic routes follow file-based routing. There are no root <code>/</code> API routes — the filename becomes the route segment. Write your Hono routes <strong>without</strong> the <code>/api</code> prefix.
+                  </Note>
+                </motion.section>
+
+                {/* File Structure */}
+                <motion.section id="file-structure" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">File Structure</h2>
+                  <p className="text-slate-300 mb-4">
+                    Dynamic segments are created using square brackets in file or folder names:
+                  </p>
+                  <CodeBlock 
+                    code={`src/app/api/
 ├── posts/
 │   └── [id].ts              → /api/posts/:id
 ├── users/
@@ -139,99 +164,73 @@ export default function ApiDynamicPage() {
 ├── files/
 │   └── [...path].ts         → /api/files/a/b/c (catch-all)
 └── [...catch].ts            → /api/* (global catch-all)`}
-                />
-                <Table 
-                  headers={['Pattern', 'File/Folder Name', 'Matches']}
-                  rows={[
-                    ['[id]', 'Single dynamic segment', '/api/posts/123, /api/posts/abc'],
-                    ['[category]/[slug]', 'Multiple dynamic segments', '/api/posts/tech/hello-world'],
-                    ['[...path]', 'Catch-all (required)', '/api/files/a, /api/files/a/b/c'],
-                    ['[[...slug]]', 'Catch-all (optional)', '/api/docs, /api/docs/a/b'],
-                  ]}
-                />
-              </motion.section>
+                  />
+                  <Table 
+                    headers={['Pattern', 'File/Folder Name', 'Matches']}
+                    rows={[
+                      ['[id]', 'Single dynamic segment', '/api/posts/123, /api/posts/abc'],
+                      ['[category]/[slug]', 'Multiple dynamic segments', '/api/posts/tech/hello-world'],
+                      ['[...path]', 'Catch-all (required)', '/api/files/a, /api/files/a/b/c'],
+                      ['[[...slug]]', 'Catch-all (optional)', '/api/docs, /api/docs/a/b'],
+                    ]}
+                  />
+                </motion.section>
 
-              {/* Single Dynamic Parameter — Hono */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Single Dynamic Parameter</h2>
-                <p className="text-slate-300 mb-4">
-                  Use <code className="text-cyan-400">[name]</code> in the filename for a single dynamic segment:
-                </p>
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">With Hono</h3>
-                <CodeBlock 
-                  code={`// src/app/api/posts/[id].ts → /api/posts/:id
+                {/* Single Dynamic Parameter */}
+                <motion.section id="single-parameter" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Single Dynamic Parameter</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use <code className="text-cyan-400">[name]</code> in the filename for a single dynamic segment:
+                  </p>
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">With Hono</h3>
+                  <CodeBlock 
+                    code={`// src/app/api/posts/[id].ts → /api/posts/:id
 import { Hono } from 'hono'
 
 const app = new Hono()
 
-// GET /api/posts/:id
 app.get('/posts/:id', (c) => {
   const id = c.req.param('id')
   return c.json({ id, title: \`Post \${id}\` })
 })
 
-// PUT /api/posts/:id
 app.put('/posts/:id', async (c) => {
   const id = c.req.param('id')
   const body = await c.req.json()
   return c.json({ id, ...body })
 })
 
-// DELETE /api/posts/:id
-app.delete('/posts/:id', (c) => {
-  const id = c.req.param('id')
-  return c.json({ message: \`Deleted post \${id}\` })
-})
-
 export default app`}
-                  filename="src/app/api/posts/[id].ts → /api/posts/:id"
-                />
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">With Plain Function</h3>
-                <CodeBlock 
-                  code={`// src/app/api/posts/[id].ts → /api/posts/:id
+                    filename="src/app/api/posts/[id].ts"
+                  />
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">With Plain Function</h3>
+                  <CodeBlock 
+                    code={`// src/app/api/posts/[id].ts → /api/posts/:id
 export default async function handler(request: Request) {
-  // Dynamic params are passed via x-bini-params header
   const paramsHeader = request.headers.get('x-bini-params')
   const params = paramsHeader ? JSON.parse(paramsHeader) : {}
   const id = params.id
   
   if (request.method === 'GET') {
-    const post = await getPost(id)
-    return post 
-      ? Response.json(post)
-      : Response.json({ error: 'Not found' }, { status: 404 })
-  }
-  
-  if (request.method === 'PUT') {
-    const body = await request.json()
-    const updated = await updatePost(id, body)
-    return Response.json(updated)
+    return Response.json({ id, title: \`Post \${id}\` })
   }
   
   return Response.json({ error: 'Method not allowed' }, { status: 405 })
-}
-
-async function getPost(id: string) {
-  return { id, title: \`Post \${id}\` }
-}
-
-async function updatePost(id: string, data: any) {
-  return { id, ...data }
 }`}
-                  filename="src/app/api/posts/[id].ts → /api/posts/:id"
-                />
-              </motion.section>
+                    filename="src/app/api/posts/[id].ts"
+                  />
+                </motion.section>
 
-              {/* Multiple Dynamic Parameters */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Multiple Dynamic Parameters</h2>
-                <p className="text-slate-300 mb-4">
-                  Combine multiple dynamic segments in a single route using nested directories or a single file:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/api/posts/[category]/[slug].ts → /api/posts/:category/:slug
+                {/* Multiple Dynamic Parameters */}
+                <motion.section id="multiple-parameters" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Multiple Dynamic Parameters</h2>
+                  <p className="text-slate-300 mb-4">
+                    Combine multiple dynamic segments in a single route:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/api/posts/[category]/[slug].ts → /api/posts/:category/:slug
 import { Hono } from 'hono'
 
 const app = new Hono()
@@ -239,99 +238,75 @@ const app = new Hono()
 app.get('/posts/:category/:slug', (c) => {
   const category = c.req.param('category')
   const slug = c.req.param('slug')
-  
-  return c.json({
-    category,
-    slug,
-    title: \`\${category}: \${slug}\`
-  })
-})
-
-app.put('/posts/:category/:slug', async (c) => {
-  const category = c.req.param('category')
-  const slug = c.req.param('slug')
-  const body = await c.req.json()
-  
-  return c.json({ category, slug, ...body })
+  return c.json({ category, slug })
 })
 
 export default app`}
-                  filename="src/app/api/posts/[category]/[slug].ts → /api/posts/:category/:slug"
-                />
-                <Table 
-                  headers={['URL', 'params']}
-                  rows={[
-                    ['/api/posts/tech/hello-world', '{ category: "tech", slug: "hello-world" }'],
-                    ['/api/posts/lifestyle/tips', '{ category: "lifestyle", slug: "tips" }'],
-                  ]}
-                />
-              </motion.section>
+                    filename="src/app/api/posts/[category]/[slug].ts"
+                  />
+                  <Table 
+                    headers={['URL', 'params']}
+                    rows={[
+                      ['/api/posts/tech/hello-world', '{ category: "tech", slug: "hello-world" }'],
+                      ['/api/posts/lifestyle/tips', '{ category: "lifestyle", slug: "tips" }'],
+                    ]}
+                  />
+                </motion.section>
 
-              {/* Catch-all Routes */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Catch-all Routes</h2>
-                <p className="text-slate-300 mb-4">
-                  Use <code className="text-cyan-400">[...name]</code> in the filename to match any number of segments:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/api/files/[...path].ts → /api/files/*
+                {/* Catch-all Routes */}
+                <motion.section id="catch-all-routes" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Catch-all Routes</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use <code className="text-cyan-400">[...name]</code> in the filename to match any number of segments:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/api/files/[...path].ts → /api/files/*
 import { Hono } from 'hono'
 
 const app = new Hono()
 
 app.all('/files/:path*', (c) => {
   const path = c.req.param('path') || ''
-  const segments = path.split('/').filter(Boolean)
-  
-  return c.json({
-    method: c.req.method,
-    path: path || '/',
-    segments,
-    message: \`Request for: \${path || 'root'}\`
-  })
+  return c.json({ path, segments: path.split('/').filter(Boolean) })
 })
 
 export default app`}
-                  filename="src/app/api/files/[...path].ts → /api/files/*"
-                />
-                <Table 
-                  headers={['URL', 'path value']}
-                  rows={[
-                    ['/api/files', ''],
-                    ['/api/files/images', 'images'],
-                    ['/api/files/images/2024', 'images/2024'],
-                    ['/api/files/docs/api/reference', 'docs/api/reference'],
-                  ]}
-                />
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">Global Catch-all</h3>
-                <CodeBlock 
-                  code={`// src/app/api/[...catch].ts → /api/* (catch-all)
+                    filename="src/app/api/files/[...path].ts"
+                  />
+                  <Table 
+                    headers={['URL', 'path value']}
+                    rows={[
+                      ['/api/files', ''],
+                      ['/api/files/images', 'images'],
+                      ['/api/files/images/2024', 'images/2024'],
+                      ['/api/files/docs/api/reference', 'docs/api/reference'],
+                    ]}
+                  />
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">Global Catch-all</h3>
+                  <CodeBlock 
+                    code={`// src/app/api/[...catch].ts → /api/*
 import { Hono } from 'hono'
 
 const app = new Hono()
 
 app.all('*', (c) => {
-  return c.json({
-    error: 'Not Found',
-    path: c.req.path,
-    method: c.req.method,
-  }, 404)
+  return c.json({ error: 'Not Found', path: c.req.path }, 404)
 })
 
 export default app`}
-                  filename="src/app/api/[...catch].ts → /api/*"
-                />
-              </motion.section>
+                    filename="src/app/api/[...catch].ts"
+                  />
+                </motion.section>
 
-              {/* Optional Catch-all */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Optional Catch-all</h2>
-                <p className="text-slate-300 mb-4">
-                  Use <code className="text-cyan-400">[[...name]]</code> to make the catch-all optional — the route matches even when no segments are provided:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/api/docs/[[...slug]].ts → /api/docs or /api/docs/a/b
+                {/* Optional Catch-all */}
+                <motion.section id="optional-catch-all" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Optional Catch-all</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use <code className="text-cyan-400">[[...name]]</code> to make the catch-all optional:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/api/docs/[[...slug]].ts → /api/docs or /api/docs/a/b
 import { Hono } from 'hono'
 
 const app = new Hono()
@@ -340,42 +315,33 @@ app.get('/docs/:slug*?', (c) => {
   const slug = c.req.param('slug')
   
   if (!slug) {
-    return c.json({
-      message: 'Documentation home',
-      sections: ['getting-started', 'api-reference', 'guides']
-    })
+    return c.json({ message: 'Documentation home' })
   }
   
-  const segments = slug.split('/').filter(Boolean)
-  
-  return c.json({
-    message: 'Documentation page',
-    path: segments,
-    content: \`Docs for: \${segments.join(' > ')}\`
-  })
+  return c.json({ path: slug.split('/').filter(Boolean) })
 })
 
 export default app`}
-                  filename="src/app/api/docs/[[...slug]].ts → /api/docs or /api/docs/a/b"
-                />
-                <Table 
-                  headers={['URL', 'slug value']}
-                  rows={[
-                    ['/api/docs', 'undefined (home page)'],
-                    ['/api/docs/getting-started', 'getting-started'],
-                    ['/api/docs/api/reference', 'api/reference'],
-                  ]}
-                />
-              </motion.section>
+                    filename="src/app/api/docs/[[...slug]].ts"
+                  />
+                  <Table 
+                    headers={['URL', 'slug value']}
+                    rows={[
+                      ['/api/docs', 'undefined (home page)'],
+                      ['/api/docs/getting-started', 'getting-started'],
+                      ['/api/docs/api/reference', 'api/reference'],
+                    ]}
+                  />
+                </motion.section>
 
-              {/* Nested Dynamic Routes */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Nested Dynamic Routes</h2>
-                <p className="text-slate-300 mb-4">
-                  Combine static and dynamic segments for complex routing — use multiple <code className="text-cyan-400">[param]</code> directories:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/api/orgs/[orgId]/repos/[repoId]/issues/[issueId].ts
+                {/* Nested Dynamic Routes */}
+                <motion.section id="nested-dynamic" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Nested Dynamic Routes</h2>
+                  <p className="text-slate-300 mb-4">
+                    Combine static and dynamic segments for complex routing:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/api/orgs/[orgId]/repos/[repoId]/issues/[issueId].ts
 // → /api/orgs/:orgId/repos/:repoId/issues/:issueId
 import { Hono } from 'hono'
 
@@ -383,202 +349,138 @@ const app = new Hono()
 
 app.get('/orgs/:orgId/repos/:repoId/issues/:issueId', (c) => {
   const { orgId, repoId, issueId } = c.req.param()
-  
-  return c.json({
-    org: orgId,
-    repo: repoId,
-    issue: issueId,
-    url: \`https://github.com/\${orgId}/\${repoId}/issues/\${issueId}\`
-  })
-})
-
-app.patch('/orgs/:orgId/repos/:repoId/issues/:issueId', async (c) => {
-  const { orgId, repoId, issueId } = c.req.param()
-  const body = await c.req.json()
-  
-  return c.json({
-    org: orgId,
-    repo: repoId,
-    issue: issueId,
-    updated: body
-  })
+  return c.json({ orgId, repoId, issueId })
 })
 
 export default app`}
-                  filename="src/app/api/orgs/[orgId]/repos/[repoId]/issues/[issueId].ts"
-                />
-              </motion.section>
+                    filename="src/app/api/orgs/[orgId]/repos/[repoId]/issues/[issueId].ts"
+                  />
+                </motion.section>
 
-              {/* Query Parameters with Dynamic Routes */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Query Parameters with Dynamic Routes</h2>
-                <p className="text-slate-300 mb-4">
-                  Combine dynamic path parameters with query parameters for flexible filtering:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/api/posts/[id]/comments.ts → /api/posts/:id/comments
+                {/* Query Parameters */}
+                <motion.section id="query-parameters" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Query Parameters</h2>
+                  <p className="text-slate-300 mb-4">
+                    Combine dynamic path parameters with query parameters:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/api/posts/[id]/comments.ts → /api/posts/:id/comments
 import { Hono } from 'hono'
 
 const app = new Hono()
 
-// GET /api/posts/:id/comments?page=1&limit=10&sort=newest
 app.get('/posts/:id/comments', (c) => {
   const postId = c.req.param('id')
   const page = parseInt(c.req.query('page') || '1')
   const limit = parseInt(c.req.query('limit') || '10')
-  const sort = c.req.query('sort') || 'newest'
   
-  return c.json({
-    postId,
-    comments: [],
-    pagination: { page, limit, sort }
-  })
-})
-
-// POST /api/posts/:id/comments
-app.post('/posts/:id/comments', async (c) => {
-  const postId = c.req.param('id')
-  const body = await c.req.json()
-  
-  return c.json({
-    postId,
-    comment: {
-      id: Date.now(),
-      ...body
-    }
-  }, 201)
+  return c.json({ postId, page, limit })
 })
 
 export default app`}
-                  filename="src/app/api/posts/[id]/comments.ts → /api/posts/:id/comments"
-                />
-              </motion.section>
+                    filename="src/app/api/posts/[id]/comments.ts"
+                  />
+                </motion.section>
 
-              {/* Route Priority */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Route Priority</h2>
-                <p className="text-slate-300 mb-4">
-                  When multiple routes could match a URL, Bini.js resolves them in this order:
-                </p>
-                <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4 mb-6">
-                  <ol className="list-decimal list-inside space-y-2 text-slate-300">
-                    <li><strong className="text-white">Static routes</strong> — exact matches (highest priority)</li>
-                    <li><strong className="text-white">Dynamic single segments</strong> — <code className="text-cyan-400">[id]</code></li>
-                    <li><strong className="text-white">Catch-all segments</strong> — <code className="text-cyan-400">[...slug]</code></li>
-                    <li><strong className="text-white">Optional catch-all</strong> — <code className="text-cyan-400">[[...slug]]</code> (lowest priority)</li>
-                  </ol>
-                </div>
-                <CodeBlock 
-                  code={`src/app/api/posts/
+                {/* Route Priority */}
+                <motion.section id="route-priority" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Route Priority</h2>
+                  <p className="text-slate-300 mb-4">
+                    When multiple routes could match a URL, Bini.js resolves them in this order:
+                  </p>
+                  <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4 mb-6">
+                    <ol className="list-decimal list-inside space-y-2 text-slate-300">
+                      <li><strong className="text-white">Static routes</strong> — exact matches</li>
+                      <li><strong className="text-white">Dynamic single segments</strong> — <code className="text-cyan-400">[id]</code></li>
+                      <li><strong className="text-white">Catch-all segments</strong> — <code className="text-cyan-400">[...slug]</code></li>
+                      <li><strong className="text-white">Optional catch-all</strong> — <code className="text-cyan-400">[[...slug]]</code></li>
+                    </ol>
+                  </div>
+                  <CodeBlock 
+                    code={`src/app/api/posts/
 ├── featured.ts           → /api/posts/featured (static — matched first)
 ├── [id].ts               → /api/posts/123 (dynamic — matched second)
 └── [...slug].ts          → /api/posts/a/b/c (catch-all — matched last)`}
-                />
-                <Callout type="tip">
-                  Routes are sorted by priority and then by path length (shortest first). Static routes always win over dynamic ones.
-                </Callout>
-              </motion.section>
+                  />
+                  <Note>
+                    Routes are sorted by priority and then by path length (shortest first). Static routes always win over dynamic ones.
+                  </Note>
+                </motion.section>
 
-              {/* Complete Example */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Complete Example</h2>
-                <p className="text-slate-300 mb-4">
-                  A full-featured store API using an optional catch-all for flexible routing:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/api/store/[[...path]].ts → /api/store or /api/store/*
+                {/* Complete Example */}
+                <motion.section id="complete-example" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Complete Example</h2>
+                  <p className="text-slate-300 mb-4">
+                    A full-featured store API with dynamic routing:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/api/store/[[...path]].ts → /api/store or /api/store/*
 import { Hono } from 'hono'
 
 const app = new Hono()
-
-// Products database (mock)
 const products = new Map()
 
-// GET /api/store — List all products (home)
-app.get('/store', (c) => {
-  return c.json({ products: Array.from(products.values()) })
-})
-
-// GET /api/store/products — Also list all products
-app.get('/store/products', (c) => {
-  return c.json({ products: Array.from(products.values()) })
-})
-
-// GET /api/store/products/:id — Get a single product
+app.get('/store', (c) => c.json({ products: Array.from(products.values()) }))
+app.get('/store/products', (c) => c.json({ products: Array.from(products.values()) }))
 app.get('/store/products/:id', (c) => {
-  const id = c.req.param('id')
-  const product = products.get(id)
-  
-  return product 
-    ? c.json(product)
-    : c.json({ error: 'Product not found' }, 404)
+  const product = products.get(c.req.param('id'))
+  return product ? c.json(product) : c.json({ error: 'Not found' }, 404)
 })
 
-// POST /api/store/products — Create a product
 app.post('/store/products', async (c) => {
   const body = await c.req.json()
   const id = Date.now().toString()
   const product = { id, ...body }
   products.set(id, product)
-  
   return c.json(product, 201)
 })
 
-// PUT /api/store/products/:id — Update a product
 app.put('/store/products/:id', async (c) => {
   const id = c.req.param('id')
-  if (!products.has(id)) {
-    return c.json({ error: 'Product not found' }, 404)
-  }
-  
-  const body = await c.req.json()
-  const product = { ...products.get(id), ...body }
+  if (!products.has(id)) return c.json({ error: 'Not found' }, 404)
+  const product = { ...products.get(id), ...await c.req.json() }
   products.set(id, product)
-  
   return c.json(product)
 })
 
-// DELETE /api/store/products/:id — Delete a product
 app.delete('/store/products/:id', (c) => {
   const id = c.req.param('id')
-  const deleted = products.delete(id)
-  
-  return deleted
-    ? c.json({ message: 'Product deleted' })
-    : c.json({ error: 'Product not found' }, 404)
+  return products.delete(id)
+    ? c.json({ message: 'Deleted' })
+    : c.json({ error: 'Not found' }, 404)
 })
 
-// Catch-all for unmatched routes under /api/store/*
-app.all('/store/*', (c) => {
-  return c.json({ 
-    error: 'Not Found',
-    path: c.req.path 
-  }, 404)
-})
+app.all('/store/*', (c) => c.json({ error: 'Not Found' }, 404))
 
 export default app`}
-                  filename="src/app/api/store/[[...path]].ts → /api/store or /api/store/*"
-                />
-              </motion.section>
+                    filename="src/app/api/store/[[...path]].ts"
+                  />
+                </motion.section>
 
-              {/* Previous / Next Navigation */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
-                <Link to="/docs/api-hono" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                  <div>
-                    <div className="text-xs text-slate-500">Previous</div>
-                    <div className="text-sm font-medium">Hono Integration</div>
-                  </div>
-                </Link>
-                <Link to="/docs/css" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
-                  <div>
-                    <div className="text-xs text-slate-500">Next</div>
-                    <div className="text-sm font-medium">CSS Overview</div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+                {/* Previous / Next Navigation */}
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
+                  <Link to="/docs/api-hono" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                    <div>
+                      <div className="text-xs text-slate-500">Previous</div>
+                      <div className="text-sm font-medium">Hono Integration</div>
+                    </div>
+                  </Link>
+                  <Link to="/docs/api-cors" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
+                    <div>
+                      <div className="text-xs text-slate-500">Next</div>
+                      <div className="text-sm font-medium">CORS</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
 
+              </div>
+
+              {/* Right-hand "On this page" sidebar */}
+              <aside className="hidden xl:block w-56 shrink-0">
+                <TableOfContents items={TOC_ITEMS} editUrl={EDIT_URL} />
+              </aside>
             </div>
           </DocLayout>
           

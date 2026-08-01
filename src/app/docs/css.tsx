@@ -4,20 +4,44 @@ import { motion } from 'framer-motion'
 import {
   ArrowLeft,
   ArrowRight,
-  AlertTriangle,
-  Info,
-  Lightbulb,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
 import { DocLayout } from '../../components/DocSidebar'
+import { CopyPageButton } from '../../components/CopyPageButton'
+import { TableOfContents, type TocItem } from '../../components/TableOfContents'
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Code Block Component
+// "On this page" entries
+// ────────────────────────────────────────────────────────────────────────────────
+const TOC_ITEMS: TocItem[] = [
+  { id: 'styling-options', label: 'Styling Options' },
+  { id: 'tailwind-css', label: 'Tailwind CSS v4' },
+  { id: 'css-modules', label: 'CSS Modules' },
+  { id: 'global-css', label: 'Global CSS' },
+  { id: 'none-option', label: 'None Option' },
+  { id: 'external-stylesheets', label: 'External Stylesheets' },
+  { id: 'css-ordering', label: 'CSS Ordering' },
+  { id: 'sass-support', label: 'Sass/SCSS Support' },
+  { id: 'css-in-js', label: 'CSS-in-JS' },
+  { id: 'css-variables', label: 'CSS Variables for Theming' },
+]
+
+const PAGE_TITLE = 'CSS'
+const PAGE_URL = 'https://bini.js.org/docs/css'
+const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/css/page.tsx'
+
+// ────────────────────────────────────────────────────────────────────────────────
+// Code Block Component with horizontal scrollbar
 // ────────────────────────────────────────────────────────────────────────────────
 function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   const [copied, setCopied] = React.useState(false)
-  const handleCopy = () => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000) }
+  const handleCopy = () => { 
+    const cleanCode = code.replace(/\$ /g, '')
+    navigator.clipboard.writeText(cleanCode)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000) 
+  }
 
   return (
     <div className="relative group mb-6">
@@ -37,9 +61,11 @@ function CodeBlock({ code, filename }: { code: string; filename?: string }) {
           </svg>
         )}
       </button>
-      <pre className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} p-4 overflow-x-auto`}>
-        <code className="text-sm font-mono text-slate-200">{code}</code>
-      </pre>
+      <div className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent hover:scrollbar-thumb-slate-500`}>
+        <pre className="p-4 min-w-max">
+          <code className="text-sm font-mono text-slate-200 whitespace-pre">{code}</code>
+        </pre>
+      </div>
     </div>
   )
 }
@@ -63,25 +89,11 @@ function Table({ headers, rows }: { headers: string[]; rows: React.ReactNode[][]
 }
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Callout Component
+// Note Component
 // ────────────────────────────────────────────────────────────────────────────────
-function Callout({ type, children }: { type: 'info' | 'warning' | 'tip'; children: React.ReactNode }) {
-  const styles = {
-    info: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', color: 'text-cyan-400', icon: Info },
-    warning: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', color: 'text-amber-400', icon: AlertTriangle },
-    tip: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', color: 'text-purple-400', icon: Lightbulb },
-  }
-  const style = styles[type]
-  const Icon = style.icon
-
+function Note({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`p-4 rounded-lg ${style.bg} border ${style.border} my-6`}>
-      <div className="flex items-center gap-2 mb-1">
-        <Icon className={`w-4 h-4 ${style.color}`} />
-        <p className={`text-sm font-medium ${style.color}`}>
-          {type === 'info' ? 'Note' : type === 'warning' ? 'Warning' : 'Tip'}
-        </p>
-      </div>
+    <div className="p-4 rounded-lg bg-slate-900/50 border border-slate-800 my-6">
       <div className="text-sm text-slate-300 [&>strong]:text-white [&>code]:text-cyan-400 [&>code]:bg-slate-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded">{children}</div>
     </div>
   )
@@ -104,47 +116,61 @@ export default function CSSPage() {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 overflow-x-hidden">
           
           <DocLayout>
-            <div className="max-w-4xl">
-              
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <h1 className="text-4xl font-bold text-white mb-2">CSS</h1>
-                <p className="text-slate-400 text-sm mb-8">
-                  Learn about the different ways to add CSS to your Bini.js application.
-                </p>
-              </motion.div>
+            <div className="flex gap-10 xl:gap-14">
+              {/* Main content column */}
+              <div className="max-w-4xl min-w-0 flex-1">
 
-              {/* Overview */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                <p className="text-slate-300 mb-6">
-                  Bini.js provides several ways to style your application. You can use Tailwind CSS v4 (default), CSS Modules, or plain CSS — choose what works best for your project.
-                </p>
-              </motion.section>
+                {/* Title + Copy page button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start justify-between gap-4 mb-4"
+                >
+                  <div>
+                    <h1 className="text-4xl font-bold text-white mb-2">{PAGE_TITLE}</h1>
+                    <p className="text-slate-400 text-sm">Learn about the different ways to add CSS to your Bini.js application.</p>
+                  </div>
+                  <div className="shrink-0 pt-2 hidden sm:block">
+                    <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
+                  </div>
+                </motion.div>
+                {/* Copy button on small screens */}
+                <div className="sm:hidden mb-8">
+                  <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
+                </div>
 
-              {/* Styling Options */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Styling Options</h2>
-                <Table 
-                  headers={['Option', 'Description', 'Best For']}
-                  rows={[
-                    ['Tailwind CSS v4', 'Utility-first CSS framework with Vite plugin (default)', 'Rapid development, consistent design'],
-                    ['CSS Modules', 'Locally scoped CSS by default', 'Component-specific styles, avoiding conflicts'],
-                    ['Global CSS', 'Traditional stylesheet applied globally', 'Base styles, resets, utilities'],
-                    ['None', 'No styling — bring your own', 'Custom setups, CSS-in-JS libraries'],
-                  ]}
-                />
-              </motion.section>
+                {/* Overview */}
+                <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                  <p className="text-slate-300 mb-6">
+                    Bini.js provides several ways to style your application. You can use Tailwind CSS v4 (default), CSS Modules, or plain CSS — choose what works best for your project.
+                  </p>
+                </motion.section>
 
-              {/* Tailwind CSS v4 */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tailwind CSS v4</h2>
-                <p className="text-slate-300 mb-4">
-                  Tailwind CSS v4 is pre-configured using the official Vite plugin. No PostCSS configuration needed — it just works.
-                </p>
-                <Callout type="info">
-                  <strong>Zero Configuration:</strong> Bini.js uses the <code>@tailwindcss/vite</code> plugin. Everything is configured automatically — no <code>postcss.config.js</code> or <code>tailwind.config.js</code> required.
-                </Callout>
-                <CodeBlock 
-                  code={`// src/app/page.tsx
+                {/* Styling Options */}
+                <motion.section id="styling-options" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Styling Options</h2>
+                  <Table 
+                    headers={['Option', 'Description', 'Best For']}
+                    rows={[
+                      ['Tailwind CSS v4', 'Utility-first CSS framework with Vite plugin (default)', 'Rapid development, consistent design'],
+                      ['CSS Modules', 'Locally scoped CSS by default', 'Component-specific styles, avoiding conflicts'],
+                      ['Global CSS', 'Traditional stylesheet applied globally', 'Base styles, resets, utilities'],
+                      ['None', 'No styling — bring your own', 'Custom setups, CSS-in-JS libraries'],
+                    ]}
+                  />
+                </motion.section>
+
+                {/* Tailwind CSS v4 */}
+                <motion.section id="tailwind-css" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tailwind CSS v4</h2>
+                  <p className="text-slate-300 mb-4">
+                    Tailwind CSS v4 is pre-configured using the official Vite plugin. No PostCSS configuration needed — it just works.
+                  </p>
+                  <Note>
+                    <strong>Zero Configuration:</strong> Bini.js uses the <code>@tailwindcss/vite</code> plugin. Everything is configured automatically — no <code>postcss.config.js</code> or <code>tailwind.config.js</code> required.
+                  </Note>
+                  <CodeBlock 
+                    code={`// src/app/page.tsx
 export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
@@ -160,21 +186,21 @@ export default function HomePage() {
     </div>
   )
 }`}
-                  filename="app/page.tsx"
-                />
-                <p className="text-slate-300 mt-4">
-                  The global CSS file simply imports Tailwind:
-                </p>
-                <CodeBlock 
-                  code={`/* src/app/globals.css */
+                    filename="app/page.tsx"
+                  />
+                  <p className="text-slate-300 mt-4">
+                    The global CSS file simply imports Tailwind:
+                  </p>
+                  <CodeBlock 
+                    code={`/* src/app/globals.css */
 @import 'tailwindcss';`}
-                  filename="app/globals.css"
-                />
-                <p className="text-slate-300 mt-4">
-                  The Vite config includes the Tailwind plugin automatically:
-                </p>
-                <CodeBlock 
-                  code={`// vite.config.ts
+                    filename="app/globals.css"
+                  />
+                  <p className="text-slate-300 mt-4">
+                    The Vite config includes the Tailwind plugin automatically:
+                  </p>
+                  <CodeBlock 
+                    code={`// vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -187,18 +213,18 @@ export default defineConfig({
     biniroute(),
   ],
 })`}
-                  filename="vite.config.ts"
-                />
-              </motion.section>
+                    filename="vite.config.ts"
+                  />
+                </motion.section>
 
-              {/* CSS Modules */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS Modules</h2>
-                <p className="text-slate-300 mb-4">
-                  CSS Modules scope styles locally to avoid naming conflicts. Files must end with <code className="text-cyan-400">.module.css</code>:
-                </p>
-                <CodeBlock 
-                  code={`/* src/app/components/Button.module.css */
+                {/* CSS Modules */}
+                <motion.section id="css-modules" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS Modules</h2>
+                  <p className="text-slate-300 mb-4">
+                    CSS Modules scope styles locally to avoid naming conflicts. Files must end with <code className="text-cyan-400">.module.css</code>:
+                  </p>
+                  <CodeBlock 
+                    code={`/* src/app/components/Button.module.css */
 .button {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -213,50 +239,35 @@ export default defineConfig({
 
 .primary:hover {
   background: #0891b2;
-}
-
-.secondary {
-  background: transparent;
-  color: white;
-  border: 1px solid #334155;
-}
-
-.secondary:hover {
-  background: #1e293b;
 }`}
-                  filename="Button.module.css"
-                />
-                <CodeBlock 
-                  code={`// src/app/components/Button.tsx
+                    filename="Button.module.css"
+                  />
+                  <CodeBlock 
+                    code={`// src/app/components/Button.tsx
 import styles from './Button.module.css'
 
-interface ButtonProps {
-  variant?: 'primary' | 'secondary'
-  children: React.ReactNode
-}
-
-export function Button({ variant = 'primary', children }: ButtonProps) {
+export function Button({ variant = 'primary', children }) {
   return (
     <button className={\`\${styles.button} \${styles[variant]}\`}>
       {children}
     </button>
   )
 }`}
-                  filename="Button.tsx"
-                />
-                <Callout type="tip">
-                  CSS Modules are processed by Vite automatically — no configuration needed.
-                </Callout>
-              </motion.section>
+                    filename="Button.tsx"
+                  />
+                  <Note>
+                    CSS Modules are processed by Vite automatically — no configuration needed.
+                  </Note>
+                </motion.section>
 
-              {/* Global CSS */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Global CSS</h2>
-                <p className="text-slate-300 mb-4">
-                  Import CSS files directly to apply styles globally. Great for base styles, resets, and utilities:
-                </p>
-                <CodeBlock 
-                  code={`/* src/app/globals.css */
+                {/* Global CSS */}
+                <motion.section id="global-css" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Global CSS</h2>
+                  <p className="text-slate-300 mb-4">
+                    Import CSS files directly to apply styles globally:
+                  </p>
+                  <CodeBlock 
+                    code={`/* src/app/globals.css */
 * {
   margin: 0;
   padding: 0;
@@ -265,188 +276,149 @@ export function Button({ variant = 'primary', children }: ButtonProps) {
 
 body {
   font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
   background: black;
   color: white;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
 }`}
-                  filename="app/globals.css"
-                />
-                <CodeBlock 
-                  code={`// src/app/layout.tsx
+                    filename="app/globals.css"
+                  />
+                  <CodeBlock 
+                    code={`// src/app/layout.tsx
 import './globals.css'
-
-export const metadata = {
-  title: 'My App',
-}
 
 export default function RootLayout() {
   return <Outlet />
 }`}
-                  filename="app/layout.tsx"
-                />
-              </motion.section>
+                    filename="app/layout.tsx"
+                  />
+                </motion.section>
 
-              {/* None Option */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">None Option</h2>
-                <p className="text-slate-300 mb-4">
-                  Choose <code className="text-cyan-400">--none</code> during project creation for a clean slate. Perfect for:
-                </p>
-                <ul className="space-y-2 text-slate-300 mb-6 list-disc list-inside">
-                  <li>Bringing your own styling solution (Sass, Less, Stylus)</li>
-                  <li>Using CSS-in-JS libraries (styled-components, Emotion)</li>
-                  <li>Starting completely from scratch</li>
-                </ul>
-                <CodeBlock 
-                  code={`# Create project without styling
-npx create-bini-app@latest my-app --none`}
-                />
-                <Callout type="tip">
-                  Even with <code>--none</code>, Vite still handles <code>.css</code> imports natively. You can add any CSS file and it will work.
-                </Callout>
-              </motion.section>
+                {/* None Option */}
+                <motion.section id="none-option" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">None Option</h2>
+                  <p className="text-slate-300 mb-4">
+                    Choose <code className="text-cyan-400">--none</code> during project creation for a clean slate:
+                  </p>
+                  <CodeBlock 
+                    code={`npx create-bini-app@latest my-app --none`}
+                  />
+                  <Note>
+                    Even with <code>--none</code>, Vite still handles <code>.css</code> imports natively. You can add any CSS file and it will work.
+                  </Note>
+                </motion.section>
 
-              {/* External Stylesheets */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">External Stylesheets</h2>
-                <p className="text-slate-300 mb-4">
-                  Import styles from npm packages or external URLs:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/layout.tsx
+                {/* External Stylesheets */}
+                <motion.section id="external-stylesheets" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">External Stylesheets</h2>
+                  <p className="text-slate-300 mb-4">
+                    Import styles from npm packages or external URLs:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/layout.tsx
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'animate.css'
 
 export default function RootLayout() {
   return <Outlet />
 }`}
-                  filename="app/layout.tsx"
-                />
-              </motion.section>
+                    filename="app/layout.tsx"
+                  />
+                </motion.section>
 
-              {/* CSS Ordering */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS Ordering</h2>
-                <p className="text-slate-300 mb-4">
-                  CSS is applied in the order you import it. Import global styles first, then component-specific styles:
-                </p>
-                <CodeBlock 
-                  code={`// Correct order
-import './globals.css'        // Base styles
-import './utilities.css'      // Utility classes
-import styles from './Component.module.css'  // Component styles`}
-                />
-                <Callout type="tip">
-                  Keep CSS imports in a consistent order to avoid specificity issues. Global styles → utilities → component styles.
-                </Callout>
-              </motion.section>
+                {/* CSS Ordering */}
+                <motion.section id="css-ordering" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS Ordering</h2>
+                  <p className="text-slate-300 mb-4">
+                    CSS is applied in the order you import it:
+                  </p>
+                  <CodeBlock 
+                    code={`import './globals.css'        // Base styles first
+import './utilities.css'      // Utilities second
+import styles from './Component.module.css'  // Component styles last`}
+                  />
+                  <Note>
+                    Keep CSS imports in a consistent order to avoid specificity issues. Global styles → utilities → component styles.
+                  </Note>
+                </motion.section>
 
-              {/* Sass/SCSS Support */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Sass/SCSS Support</h2>
-                <p className="text-slate-300 mb-4">
-                  Vite has built-in support for Sass. Just install it and import <code className="text-cyan-400">.scss</code> files:
-                </p>
-                <CodeBlock 
-                  code={`npm install -D sass`}
-                />
-                <CodeBlock 
-                  code={`/* src/app/styles/variables.scss */
-$primary: #06b6d4;
-$secondary: #8b5cf6;
-$dark: #0a0a0a;
-
-/* src/app/components/Card.module.scss */
-@use '../styles/variables' as *;
-
+                {/* Sass/SCSS Support */}
+                <motion.section id="sass-support" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Sass/SCSS Support</h2>
+                  <p className="text-slate-300 mb-4">
+                    Vite has built-in support for Sass:
+                  </p>
+                  <CodeBlock 
+                    code={`npm install -D sass`}
+                  />
+                  <CodeBlock 
+                    code={`/* src/app/components/Card.module.scss */
 .card {
-  background: $dark;
-  border: 1px solid lighten($dark, 10%);
+  background: #0a0a0a;
+  border: 1px solid #1e293b;
   padding: 1.5rem;
   border-radius: 0.75rem;
   
   &:hover {
-    border-color: $primary;
-  }
-  
-  .title {
-    color: $primary;
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
+    border-color: #06b6d4;
   }
 }`}
-                  filename="Card.module.scss"
-                />
-                <Callout type="info">
-                  Vite handles Sass compilation automatically. No additional configuration needed.
-                </Callout>
-              </motion.section>
+                    filename="Card.module.scss"
+                  />
+                  <Note>
+                    Vite handles Sass compilation automatically. No additional configuration needed.
+                  </Note>
+                </motion.section>
 
-              {/* CSS-in-JS */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS-in-JS</h2>
-                <p className="text-slate-300 mb-4">
-                  You can use CSS-in-JS libraries like styled-components or Emotion with the <code className="text-cyan-400">--none</code> option:
-                </p>
-                <CodeBlock 
-                  code={`npm install styled-components`}
-                />
-                <CodeBlock 
-                  code={`// src/app/components/StyledButton.tsx
+                {/* CSS-in-JS */}
+                <motion.section id="css-in-js" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS-in-JS</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use CSS-in-JS libraries with the <code className="text-cyan-400">--none</code> option:
+                  </p>
+                  <CodeBlock 
+                    code={`npm install styled-components`}
+                  />
+                  <CodeBlock 
+                    code={`// src/app/components/StyledButton.tsx
 import styled from 'styled-components'
 
-const Button = styled.button<{ $primary?: boolean }>\`
+const Button = styled.button\`
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  font-weight: 500;
-  background: \${props => props.$primary ? '#06b6d4' : 'transparent'};
-  color: \${props => props.$primary ? 'black' : 'white'};
-  border: \${props => props.$primary ? 'none' : '1px solid #334155'};
+  background: #06b6d4;
+  color: black;
   cursor: pointer;
-  transition: all 0.2s;
-
+  
   &:hover {
-    background: \${props => props.$primary ? '#0891b2' : '#1e293b'};
+    background: #0891b2;
   }
 \`
 
-export function StyledButton({ primary, children }) {
-  return <Button $primary={primary}>{children}</Button>
+export function StyledButton({ children }) {
+  return <Button>{children}</Button>
 }`}
-                  filename="StyledButton.tsx"
-                />
-              </motion.section>
+                    filename="StyledButton.tsx"
+                  />
+                </motion.section>
 
-              {/* CSS Variables for Theming */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS Variables for Theming</h2>
-                <p className="text-slate-300 mb-4">
-                  Define CSS variables for consistent theming and easy dark mode:
-                </p>
-                <CodeBlock 
-                  code={`/* src/app/globals.css */
+                {/* CSS Variables */}
+                <motion.section id="css-variables" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">CSS Variables for Theming</h2>
+                  <p className="text-slate-300 mb-4">
+                    Define CSS variables for consistent theming:
+                  </p>
+                  <CodeBlock 
+                    code={`/* src/app/globals.css */
 :root {
   --bg-primary: #000000;
-  --bg-secondary: #0a0a0a;
   --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
   --accent: #06b6d4;
   --border: #1e293b;
 }
 
-/* Dark mode is default, add light mode override */
 @media (prefers-color-scheme: light) {
   :root {
     --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
     --text-primary: #0f172a;
-    --text-secondary: #475569;
     --border: #e2e8f0;
   }
 }
@@ -455,55 +427,34 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
 }`}
-                  filename="app/globals.css"
-                />
-              </motion.section>
+                    filename="app/globals.css"
+                  />
+                </motion.section>
 
-              {/* Best Practices */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Best Practices</h2>
-                <ul className="space-y-3 text-slate-300 mb-6">
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Use Tailwind CSS v4 for most projects</strong> — It's fast, zero-config, and well-integrated with Vite.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Use CSS Modules for component libraries</strong> — Avoids naming conflicts.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Keep global CSS minimal</strong> — Only for resets and base styles.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Order imports consistently</strong> — Global → utilities → components.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Use CSS variables for theming</strong> — Easy dark mode and customization.</span>
-                  </li>
-                </ul>
-              </motion.section>
+                {/* Previous / Next Navigation */}
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
+                  <Link to="/docs/env-api" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                    <div>
+                      <div className="text-xs text-slate-500">Previous</div>
+                      <div className="text-sm font-medium">Using in API Routes</div>
+                    </div>
+                  </Link>
+                  <Link to="/docs/tailwind" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
+                    <div>
+                      <div className="text-xs text-slate-500">Next</div>
+                      <div className="text-sm font-medium">Tailwind CSS</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
 
-              {/* Previous / Next Navigation */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
-                <Link to="/docs/api-dynamic" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                  <div>
-                    <div className="text-xs text-slate-500">Previous</div>
-                    <div className="text-sm font-medium">Dynamic API Routes</div>
-                  </div>
-                </Link>
-                <Link to="/docs/tailwind" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
-                  <div>
-                    <div className="text-xs text-slate-500">Next</div>
-                    <div className="text-sm font-medium">Tailwind CSS</div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+              </div>
 
+              {/* Right-hand "On this page" sidebar */}
+              <aside className="hidden xl:block w-56 shrink-0">
+                <TableOfContents items={TOC_ITEMS} editUrl={EDIT_URL} />
+              </aside>
             </div>
           </DocLayout>
           

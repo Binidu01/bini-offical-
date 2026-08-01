@@ -4,20 +4,42 @@ import { motion } from 'framer-motion'
 import {
   ArrowLeft,
   ArrowRight,
-  AlertTriangle,
-  Info,
-  Lightbulb,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
 import { DocLayout } from '../../components/DocSidebar'
+import { CopyPageButton } from '../../components/CopyPageButton'
+import { TableOfContents, type TocItem } from '../../components/TableOfContents'
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Code Block Component
+// "On this page" entries
+// ────────────────────────────────────────────────────────────────────────────────
+const TOC_ITEMS: TocItem[] = [
+  { id: 'setup', label: 'Setup' },
+  { id: 'basic-usage', label: 'Basic Usage' },
+  { id: 'v4-features', label: 'Tailwind CSS v4 Features' },
+  { id: 'theming', label: 'Theming with CSS Variables' },
+  { id: 'responsive', label: 'Responsive Design' },
+  { id: 'dark-mode', label: 'Dark Mode' },
+  { id: 'custom-utilities', label: 'Custom Utilities' },
+  { id: 'common-patterns', label: 'Common Patterns' },
+]
+
+const PAGE_TITLE = 'Tailwind CSS'
+const PAGE_URL = 'https://bini.js.org/docs/tailwind'
+const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/tailwind/page.tsx'
+
+// ────────────────────────────────────────────────────────────────────────────────
+// Code Block Component with horizontal scrollbar
 // ────────────────────────────────────────────────────────────────────────────────
 function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   const [copied, setCopied] = React.useState(false)
-  const handleCopy = () => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000) }
+  const handleCopy = () => { 
+    const cleanCode = code.replace(/\$ /g, '')
+    navigator.clipboard.writeText(cleanCode)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000) 
+  }
 
   return (
     <div className="relative group mb-6">
@@ -37,9 +59,11 @@ function CodeBlock({ code, filename }: { code: string; filename?: string }) {
           </svg>
         )}
       </button>
-      <pre className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} p-4 overflow-x-auto`}>
-        <code className="text-sm font-mono text-slate-200">{code}</code>
-      </pre>
+      <div className={`bg-[#0a0a0a] border border-slate-700 ${filename ? 'rounded-t-none' : 'rounded-lg'} overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent hover:scrollbar-thumb-slate-500`}>
+        <pre className="p-4 min-w-max">
+          <code className="text-sm font-mono text-slate-200 whitespace-pre">{code}</code>
+        </pre>
+      </div>
     </div>
   )
 }
@@ -63,25 +87,11 @@ function Table({ headers, rows }: { headers: string[]; rows: React.ReactNode[][]
 }
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Callout Component
+// Note Component
 // ────────────────────────────────────────────────────────────────────────────────
-function Callout({ type, children }: { type: 'info' | 'warning' | 'tip'; children: React.ReactNode }) {
-  const styles = {
-    info: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', color: 'text-cyan-400', icon: Info },
-    warning: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', color: 'text-amber-400', icon: AlertTriangle },
-    tip: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', color: 'text-purple-400', icon: Lightbulb },
-  }
-  const style = styles[type]
-  const Icon = style.icon
-
+function Note({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`p-4 rounded-lg ${style.bg} border ${style.border} my-6`}>
-      <div className="flex items-center gap-2 mb-1">
-        <Icon className={`w-4 h-4 ${style.color}`} />
-        <p className={`text-sm font-medium ${style.color}`}>
-          {type === 'info' ? 'Note' : type === 'warning' ? 'Warning' : 'Tip'}
-        </p>
-      </div>
+    <div className="p-4 rounded-lg bg-slate-900/50 border border-slate-800 my-6">
       <div className="text-sm text-slate-300 [&>strong]:text-white [&>code]:text-cyan-400 [&>code]:bg-slate-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded">{children}</div>
     </div>
   )
@@ -104,33 +114,47 @@ export default function TailwindPage() {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 overflow-x-hidden">
           
           <DocLayout>
-            <div className="max-w-4xl">
-              
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <h1 className="text-4xl font-bold text-white mb-2">Tailwind CSS</h1>
-                <p className="text-slate-400 text-sm mb-8">
-                  Learn how to use Tailwind CSS v4 in your Bini.js application with zero configuration.
-                </p>
-              </motion.div>
+            <div className="flex gap-10 xl:gap-14">
+              {/* Main content column */}
+              <div className="max-w-4xl min-w-0 flex-1">
 
-              {/* Overview */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                <p className="text-slate-300 mb-6">
-                  Tailwind CSS v4 is the default styling option in Bini.js. It's pre-configured using the official Vite plugin — no PostCSS configuration needed.
-                </p>
-                <Callout type="info">
-                  <strong>Zero Configuration:</strong> Bini.js uses the <code>@tailwindcss/vite</code> plugin. Everything works out of the box — no <code>postcss.config.js</code> or <code>tailwind.config.js</code> required.
-                </Callout>
-              </motion.section>
+                {/* Title + Copy page button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start justify-between gap-4 mb-4"
+                >
+                  <div>
+                    <h1 className="text-4xl font-bold text-white mb-2">{PAGE_TITLE}</h1>
+                    <p className="text-slate-400 text-sm">Learn how to use Tailwind CSS v4 in your Bini.js application with zero configuration.</p>
+                  </div>
+                  <div className="shrink-0 pt-2 hidden sm:block">
+                    <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
+                  </div>
+                </motion.div>
+                {/* Copy button on small screens */}
+                <div className="sm:hidden mb-8">
+                  <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
+                </div>
 
-              {/* Setup */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Setup</h2>
-                <p className="text-slate-300 mb-4">
-                  When you create a new Bini.js project with Tailwind, everything is configured automatically:
-                </p>
-                <CodeBlock 
-                  code={`// vite.config.ts
+                {/* Overview */}
+                <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                  <p className="text-slate-300 mb-6">
+                    Tailwind CSS v4 is the default styling option in Bini.js. It's pre-configured using the official Vite plugin — no PostCSS configuration needed.
+                  </p>
+                  <Note>
+                    <strong>Zero Configuration:</strong> Bini.js uses the <code>@tailwindcss/vite</code> plugin. Everything works out of the box — no <code>postcss.config.js</code> or <code>tailwind.config.js</code> required.
+                  </Note>
+                </motion.section>
+
+                {/* Setup */}
+                <motion.section id="setup" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Setup</h2>
+                  <p className="text-slate-300 mb-4">
+                    When you create a new Bini.js project with Tailwind, everything is configured automatically:
+                  </p>
+                  <CodeBlock 
+                    code={`// vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -143,23 +167,23 @@ export default defineConfig({
     biniroute(),
   ],
 })`}
-                  filename="vite.config.ts"
-                />
-                <CodeBlock 
-                  code={`/* src/app/globals.css */
+                    filename="vite.config.ts"
+                  />
+                  <CodeBlock 
+                    code={`/* src/app/globals.css */
 @import 'tailwindcss';`}
-                  filename="app/globals.css"
-                />
-              </motion.section>
+                    filename="app/globals.css"
+                  />
+                </motion.section>
 
-              {/* Basic Usage */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Basic Usage</h2>
-                <p className="text-slate-300 mb-4">
-                  Use Tailwind's utility classes directly in your components:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/page.tsx
+                {/* Basic Usage */}
+                <motion.section id="basic-usage" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Basic Usage</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use Tailwind's utility classes directly in your components:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/page.tsx
 export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black">
@@ -175,122 +199,100 @@ export default function HomePage() {
     </div>
   )
 }`}
-                  filename="app/page.tsx"
-                />
-              </motion.section>
+                    filename="app/page.tsx"
+                  />
+                </motion.section>
 
-              {/* Tailwind v4 Features */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tailwind CSS v4 Features</h2>
-                <p className="text-slate-300 mb-4">
-                  Tailwind v4 introduces several improvements over v3:
-                </p>
-                <Table 
-                  headers={['Feature', 'Description']}
-                  rows={[
-                    ['Vite Plugin', 'Native Vite integration — no PostCSS config needed'],
-                    ['CSS-first config', 'Configure via CSS variables instead of JS'],
-                    ['Lightning CSS', 'Faster builds with Lightning CSS'],
-                    ['Simplified setup', 'Just @import "tailwindcss" — that\'s it'],
-                    ['Modern syntax', 'Uses modern CSS features like @layer, @theme'],
-                  ]}
-                />
-              </motion.section>
+                {/* Tailwind v4 Features */}
+                <motion.section id="v4-features" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tailwind CSS v4 Features</h2>
+                  <Table 
+                    headers={['Feature', 'Description']}
+                    rows={[
+                      ['Vite Plugin', 'Native Vite integration — no PostCSS config needed'],
+                      ['CSS-first config', 'Configure via CSS variables instead of JS'],
+                      ['Lightning CSS', 'Faster builds with Lightning CSS'],
+                      ['Simplified setup', 'Just @import "tailwindcss" — that\'s it'],
+                    ]}
+                  />
+                </motion.section>
 
-              {/* Theming with CSS Variables */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Theming with CSS Variables</h2>
-                <p className="text-slate-300 mb-4">
-                  Tailwind v4 uses CSS variables for theming. Customize colors, fonts, and more:
-                </p>
-                <CodeBlock 
-                  code={`/* src/app/globals.css */
+                {/* Theming */}
+                <motion.section id="theming" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Theming with CSS Variables</h2>
+                  <p className="text-slate-300 mb-4">
+                    Tailwind v4 uses CSS variables for theming:
+                  </p>
+                  <CodeBlock 
+                    code={`/* src/app/globals.css */
 @import 'tailwindcss';
 
 @theme {
   --color-primary: #06b6d4;
   --color-primary-dark: #0891b2;
-  --color-secondary: #8b5cf6;
-  --color-accent: #f59e0b;
-  
   --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  
-  --spacing-container: 1200px;
   --radius-card: 1rem;
-}
-
-@layer base {
-  body {
-    @apply bg-black text-white antialiased;
-  }
 }`}
-                  filename="app/globals.css"
-                />
-                <p className="text-slate-300 mt-4">
-                  Use your custom theme values:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/components/Card.tsx
+                    filename="app/globals.css"
+                  />
+                  <CodeBlock 
+                    code={`// src/app/components/Card.tsx
 export function Card({ children }) {
   return (
-    <div className="rounded-(--radius-card) bg-linear-to-r from-primary to-primary-dark p-6">
+    <div className="rounded-(--radius-card) bg-primary p-6">
       {children}
     </div>
   )
 }`}
-                  filename="Card.tsx"
-                />
-              </motion.section>
+                    filename="Card.tsx"
+                  />
+                </motion.section>
 
-              {/* Responsive Design */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Responsive Design</h2>
-                <p className="text-slate-300 mb-4">
-                  Use Tailwind's responsive prefixes to adapt your layout:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/page.tsx
+                {/* Responsive */}
+                <motion.section id="responsive" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Responsive Design</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use Tailwind's responsive prefixes to adapt your layout:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/page.tsx
 export default function ResponsivePage() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {[...Array(4)].map((_, i) => (
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {[...Array(3)].map((_, i) => (
           <div key={i} className="rounded-lg bg-slate-900 p-4">
-            <h2 className="text-lg font-semibold text-white sm:text-xl lg:text-2xl">
+            <h2 className="text-lg font-semibold text-white sm:text-xl">
               Card {i + 1}
             </h2>
-            <p className="mt-2 text-sm text-slate-400 sm:text-base">
-              Responsive card content
-            </p>
           </div>
         ))}
       </div>
     </div>
   )
 }`}
-                  filename="app/page.tsx"
-                />
-                <Table 
-                  headers={['Breakpoint', 'Min Width']}
-                  rows={[
-                    ['sm', '640px'],
-                    ['md', '768px'],
-                    ['lg', '1024px'],
-                    ['xl', '1280px'],
-                    ['2xl', '1536px'],
-                  ]}
-                />
-              </motion.section>
+                    filename="app/page.tsx"
+                  />
+                  <Table 
+                    headers={['Breakpoint', 'Min Width']}
+                    rows={[
+                      ['sm', '640px'],
+                      ['md', '768px'],
+                      ['lg', '1024px'],
+                      ['xl', '1280px'],
+                      ['2xl', '1536px'],
+                    ]}
+                  />
+                </motion.section>
 
-              {/* Dark Mode */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Dark Mode</h2>
-                <p className="text-slate-300 mb-4">
-                  Tailwind v4 supports dark mode out of the box using the <code className="text-cyan-400">dark:</code> variant:
-                </p>
-                <CodeBlock 
-                  code={`// src/app/components/ThemeToggle.tsx
+                {/* Dark Mode */}
+                <motion.section id="dark-mode" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Dark Mode</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use the <code className="text-cyan-400">dark:</code> variant for dark mode:
+                  </p>
+                  <CodeBlock 
+                    code={`// src/app/components/ThemeToggle.tsx
 export function ThemeToggle() {
   return (
     <div className="rounded-lg bg-white p-4 dark:bg-slate-900">
@@ -298,26 +300,23 @@ export function ThemeToggle() {
         Theme Aware Component
       </h2>
       <p className="text-slate-600 dark:text-slate-400">
-        This text adapts to light and dark mode
+        This adapts to light and dark mode
       </p>
-      <button className="mt-4 rounded-md bg-cyan-500 px-4 py-2 text-white hover:bg-cyan-600 dark:bg-cyan-600 dark:hover:bg-cyan-500">
-        Toggle Theme
-      </button>
     </div>
   )
 }`}
-                  filename="ThemeToggle.tsx"
-                />
-              </motion.section>
+                    filename="ThemeToggle.tsx"
+                  />
+                </motion.section>
 
-              {/* Custom Utilities */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Custom Utilities</h2>
-                <p className="text-slate-300 mb-4">
-                  Create custom utilities using <code className="text-cyan-400">@utility</code>:
-                </p>
-                <CodeBlock 
-                  code={`/* src/app/globals.css */
+                {/* Custom Utilities */}
+                <motion.section id="custom-utilities" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Custom Utilities</h2>
+                  <p className="text-slate-300 mb-4">
+                    Create custom utilities using <code className="text-cyan-400">@utility</code>:
+                  </p>
+                  <CodeBlock 
+                    code={`/* src/app/globals.css */
 @import 'tailwindcss';
 
 @utility text-gradient {
@@ -335,10 +334,10 @@ export function ThemeToggle() {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 }`}
-                  filename="app/globals.css"
-                />
-                <CodeBlock 
-                  code={`// Using custom utilities
+                    filename="app/globals.css"
+                  />
+                  <CodeBlock 
+                    code={`// Using custom utilities
 export function FeatureCard() {
   return (
     <div className="card-hover rounded-lg bg-slate-900 p-6">
@@ -348,105 +347,72 @@ export function FeatureCard() {
     </div>
   )
 }`}
-                />
-              </motion.section>
+                  />
+                </motion.section>
 
-              {/* Common Patterns */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Common Patterns</h2>
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">Container</h3>
-                <CodeBlock 
-                  code={`<div className="container mx-auto px-4">
+                {/* Common Patterns */}
+                <motion.section id="common-patterns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Common Patterns</h2>
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">Container</h3>
+                  <CodeBlock 
+                    code={`<div className="container mx-auto px-4">
   {/* Content */}
 </div>`}
-                />
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">Flex Center</h3>
-                <CodeBlock 
-                  code={`<div className="flex items-center justify-center">
+                  />
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">Flex Center</h3>
+                  <CodeBlock 
+                    code={`<div className="flex items-center justify-center">
   {/* Centered content */}
 </div>`}
-                />
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">Grid Layout</h3>
-                <CodeBlock 
-                  code={`<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  />
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">Grid Layout</h3>
+                  <CodeBlock 
+                    code={`<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
   {/* Grid items */}
 </div>`}
-                />
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">Sticky Header</h3>
-                <CodeBlock 
-                  code={`<header className="sticky top-0 z-50 bg-black/80 backdrop-blur-sm">
-  {/* Header content */}
-</header>`}
-                />
-                
-                <h3 className="text-lg font-semibold text-white mt-6 mb-3">Button Styles</h3>
-                <CodeBlock 
-                  code={`// Primary button
-<button className="rounded-lg bg-cyan-500 px-4 py-2 font-medium text-black hover:bg-cyan-400 transition-colors">
+                  />
+                  
+                  <h3 className="text-lg font-semibold text-white mt-6 mb-3">Button Styles</h3>
+                  <CodeBlock 
+                    code={`// Primary
+<button className="rounded-lg bg-cyan-500 px-4 py-2 font-medium text-black hover:bg-cyan-400">
   Primary
 </button>
 
-// Secondary button
-<button className="rounded-lg border border-slate-700 px-4 py-2 font-medium text-white hover:bg-slate-900 transition-colors">
+// Secondary
+<button className="rounded-lg border border-slate-700 px-4 py-2 text-white hover:bg-slate-900">
   Secondary
-</button>
-
-// Ghost button
-<button className="rounded-lg px-4 py-2 font-medium text-slate-400 hover:text-white transition-colors">
-  Ghost
 </button>`}
-                />
-              </motion.section>
+                  />
+                </motion.section>
 
-              {/* Best Practices */}
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
-                <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Best Practices</h2>
-                <ul className="space-y-3 text-slate-300 mb-6">
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Use semantic class ordering</strong> — Layout → Sizing → Spacing → Typography → Visuals.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Extract repeated patterns</strong> — Use components for repeated UI patterns.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Use CSS variables for theming</strong> — Makes dark mode and customization easy.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Leverage @utility</strong> — Create custom utilities for project-specific patterns.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-1">•</span>
-                    <span><strong className="text-white">Use arbitrary values sparingly</strong> — Prefer theme values over <code>w-[327px]</code>.</span>
-                  </li>
-                </ul>
-              </motion.section>
+                {/* Previous / Next Navigation */}
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
+                  <Link to="/docs/css" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                    <div>
+                      <div className="text-xs text-slate-500">Previous</div>
+                      <div className="text-sm font-medium">CSS Overview</div>
+                    </div>
+                  </Link>
+                  <Link to="/docs/css-modules" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
+                    <div>
+                      <div className="text-xs text-slate-500">Next</div>
+                      <div className="text-sm font-medium">CSS Modules</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
 
-              {/* Previous / Next Navigation */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
-                <Link to="/docs/css" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                  <div>
-                    <div className="text-xs text-slate-500">Previous</div>
-                    <div className="text-sm font-medium">CSS Overview</div>
-                  </div>
-                </Link>
-                <Link to="/docs/css-modules" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
-                  <div>
-                    <div className="text-xs text-slate-500">Next</div>
-                    <div className="text-sm font-medium">CSS Modules</div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+              </div>
 
+              {/* Right-hand "On this page" sidebar */}
+              <aside className="hidden xl:block w-56 shrink-0">
+                <TableOfContents items={TOC_ITEMS} editUrl={EDIT_URL} />
+              </aside>
             </div>
           </DocLayout>
           

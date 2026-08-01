@@ -1,4 +1,4 @@
-// src/pages/docs/dynamic-routes/page.tsx
+// src/pages/docs/catch-all-routes/page.tsx
 import React from 'react'
 import { motion } from 'framer-motion'
 import {
@@ -15,19 +15,20 @@ import { TableOfContents, type TocItem } from '../../components/TableOfContents'
 // "On this page" entries
 // ────────────────────────────────────────────────────────────────────────────────
 const TOC_ITEMS: TocItem[] = [
-  { id: 'dynamic-segments', label: 'Dynamic Segments' },
-  { id: 'multiple-parameters', label: 'Multiple Parameters' },
-  { id: 'catch-all-segments', label: 'Catch-all Segments' },
-  { id: 'optional-catch-all', label: 'Optional Catch-all Segments' },
-  { id: 'dynamic-layouts', label: 'Dynamic Segments in Layouts' },
-  { id: 'flat-file-dynamic', label: 'Flat File Dynamic Routes' },
+  { id: 'what-are-catch-all-routes', label: 'What are Catch-All Routes?' },
+  { id: 'basic-usage', label: 'Basic Usage' },
+  { id: 'accessing-parameters', label: 'Accessing Parameters' },
+  { id: 'nested-catch-all', label: 'Nested Catch-All Routes' },
+  { id: 'optional-catch-all', label: 'Optional Catch-All Routes' },
+  { id: 'file-based-catch-all', label: 'File-Based Catch-All Routes' },
   { id: 'route-priority', label: 'Route Priority' },
+  { id: 'use-cases', label: 'Use Cases' },
   { id: 'complete-example', label: 'Complete Example' },
 ]
 
-const PAGE_TITLE = 'Dynamic Routes'
-const PAGE_URL = 'https://bini.js.org/docs/dynamic-routes'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/dynamic-routes/page.tsx'
+const PAGE_TITLE = 'Catch-All Routes'
+const PAGE_URL = 'https://bini.js.org/docs/catch-all-routes'
+const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/catch-all-routes/page.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar
@@ -87,9 +88,9 @@ function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────────
-// Dynamic Routes Page
+// Catch-All Routes Page
 // ────────────────────────────────────────────────────────────────────────────────
-export default function DynamicRoutesPage() {
+export default function CatchAllRoutesPage() {
   return (
     <div className="min-h-screen bg-black font-sans antialiased overflow-x-hidden">
       <div className="fixed inset-0 pointer-events-none">
@@ -115,7 +116,7 @@ export default function DynamicRoutesPage() {
                 >
                   <div>
                     <h1 className="text-4xl font-bold text-white mb-2">{PAGE_TITLE}</h1>
-                    <p className="text-slate-400 text-sm">Learn how to create dynamic routes with parameters, catch-all segments, and optional catch-all segments.</p>
+                    <p className="text-slate-400 text-sm">Learn how to use catch-all routes to match multiple URL segments in Bini.js.</p>
                   </div>
                   <div className="shrink-0 pt-2 hidden sm:block">
                     <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
@@ -126,91 +127,14 @@ export default function DynamicRoutesPage() {
                   <CopyPageButton pageUrl={PAGE_URL} pageTitle={PAGE_TITLE} />
                 </div>
 
-                {/* Overview */}
-                <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                  <p className="text-slate-300 mb-6">
-                    Dynamic routes allow you to create pages that match a pattern rather than a static path. This is essential for pages like blog posts, product pages, and user profiles.
-                  </p>
-                </motion.section>
-
-                {/* Dynamic Segments */}
-                <motion.section id="dynamic-segments" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="scroll-mt-24">
-                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Dynamic Segments</h2>
+                {/* What are Catch-All Routes? */}
+                <motion.section id="what-are-catch-all-routes" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">What are Catch-All Routes?</h2>
                   <p className="text-slate-300 mb-4">
-                    Create a dynamic segment by wrapping a folder or file name in square brackets: <code className="text-cyan-400">[name]</code>.
+                    Catch-all routes allow you to match multiple URL segments in a single route. They are defined using the <code className="text-cyan-400">[...name]</code> syntax, where the parameter becomes an array of the matched segments.
                   </p>
-                  <CodeBlock 
-                    code={`src/app/
-├── blog/
-│   └── [slug]/
-│       └── page.tsx       → /blog/hello-world
-│                           → /blog/getting-started
-│                           → /blog/any-value
-├── products/
-│   └── [id]/
-│       └── page.tsx       → /products/123
-│                           → /products/abc-456
-└── users/
-    └── [userId]/
-        └── page.tsx       → /users/john
-                            → /users/mary`}
-                  />
-                  <p className="text-slate-300 mt-4">
-                    Access the parameter value using <code className="text-cyan-400">useParams()</code>:
-                  </p>
-                  <CodeBlock 
-                    code={`// src/app/blog/[slug]/page.tsx
-export default function BlogPost() {
-  const { slug } = useParams()
-  
-  return <h1>Post: {slug}</h1>
-}`}
-                    filename="app/blog/[slug]/page.tsx"
-                  />
-                </motion.section>
-
-                {/* Multiple Parameters */}
-                <motion.section id="multiple-parameters" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="scroll-mt-24">
-                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Multiple Parameters</h2>
                   <p className="text-slate-300 mb-4">
-                    You can have multiple dynamic segments in a single route:
-                  </p>
-                  <CodeBlock 
-                    code={`src/app/
-└── blog/
-    └── [category]/
-        └── [slug]/
-            └── page.tsx   → /blog/tech/hello-world
-                            → /blog/lifestyle/travel-tips`}
-                  />
-                  <CodeBlock 
-                    code={`// src/app/blog/[category]/[slug]/page.tsx
-export default function BlogPost() {
-  const { category, slug } = useParams()
-  
-  return (
-    <div>
-      <p>Category: {category}</p>
-      <h1>Post: {slug}</h1>
-    </div>
-  )
-}`}
-                    filename="app/blog/[category]/[slug]/page.tsx"
-                  />
-                  <Table 
-                    headers={['URL', 'params']}
-                    rows={[
-                      ['/blog/tech/hello-world', '{ category: "tech", slug: "hello-world" }'],
-                      ['/blog/lifestyle/travel', '{ category: "lifestyle", slug: "travel" }'],
-                    ]}
-                  />
-                </motion.section>
-
-                {/* Catch-all Segments */}
-                <motion.section id="catch-all-segments" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="scroll-mt-24">
-                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Catch-all Segments</h2>
-                  <p className="text-slate-300 mb-4">
-                    Use <code className="text-cyan-400">[...name]</code> to match any number of segments. The parameter becomes an array of the matched segments.
+                    This is useful for creating flexible routing patterns like documentation pages, nested categories, or any URL structure with variable depth.
                   </p>
                   <CodeBlock 
                     code={`src/app/
@@ -220,11 +144,44 @@ export default function BlogPost() {
                             → /docs/api/reference
                             → /docs/guides/routing/basics`}
                   />
+                </motion.section>
+
+                {/* Basic Usage */}
+                <motion.section id="basic-usage" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Basic Usage</h2>
+                  <p className="text-slate-300 mb-4">
+                    Create a catch-all route by naming a folder or file with square brackets and three dots: <code className="text-cyan-400">[...name]</code>.
+                  </p>
+                  <CodeBlock 
+                    code={`src/app/
+├── blog/
+│   └── [...slug]/
+│       └── page.tsx       → /blog/a/b/c
+│                           → /blog/2024/01/hello-world
+├── products/
+│   └── [...path]/
+│       └── page.tsx       → /products/electronics/phones
+│                           → /products/clothing/men/shirts
+└── users/
+    └── [...ids]/
+        └── page.tsx       → /users/1/2/3`}
+                  />
+                  <p className="text-slate-300 mt-4">
+                    The route will match any URL that starts with the parent path and has at least one segment.
+                  </p>
+                </motion.section>
+
+                {/* Accessing Parameters */}
+                <motion.section id="accessing-parameters" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Accessing Parameters</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use <code className="text-cyan-400">useParams()</code> (auto-imported) to access the catch-all parameter as an array:
+                  </p>
                   <CodeBlock 
                     code={`// src/app/docs/[...slug]/page.tsx
 export default function DocsPage() {
   const { slug } = useParams()
-  // slug is an array, e.g., ['api', 'reference']
+  // slug is an array of the URL segments
   
   return (
     <div>
@@ -243,24 +200,61 @@ export default function DocsPage() {
                       ['/docs/guides/routing/basics', "['guides', 'routing', 'basics']"],
                     ]}
                   />
-                  <p className="text-slate-300 mt-4">
-                    <strong className="text-white">Note:</strong> Catch-all segments have lower priority than static routes and dynamic single segments. For example, <code className="text-cyan-400">/blog/featured</code> will match a static route if it exists, falling back to the catch-all only if no more specific route matches.
-                  </p>
                 </motion.section>
 
-                {/* Optional Catch-all Segments */}
-                <motion.section id="optional-catch-all" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="scroll-mt-24">
-                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Optional Catch-all Segments</h2>
+                {/* Nested Catch-All Routes */}
+                <motion.section id="nested-catch-all" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Nested Catch-All Routes</h2>
                   <p className="text-slate-300 mb-4">
-                    Use <code className="text-cyan-400">[[...name]]</code> to make the catch-all optional. The route matches even without any segments, making it perfect for multi-level navigation like documentation or shop categories.
+                    Catch-all routes can be combined with other dynamic and static segments:
                   </p>
                   <CodeBlock 
                     code={`src/app/
-└── shop/
-    └── [[...slug]]/
-        └── page.tsx       → /shop
-                            → /shop/clothing
-                            → /shop/clothing/shirts`}
+├── blog/
+│   ├── featured/
+│   │   └── page.tsx       → /blog/featured (static - highest priority)
+│   └── [...slug]/
+│       └── page.tsx       → /blog/a/b/c (catch-all)
+├── products/
+│   └── [category]/
+│       └── [...slug]/
+│           └── page.tsx   → /products/electronics/phones/iphone
+│                           → /products/clothing/men/shirts`}
+                  />
+                  <CodeBlock 
+                    code={`// src/app/products/[category]/[...slug]/page.tsx
+export default function ProductPage() {
+  const { category, slug } = useParams()
+  
+  return (
+    <div>
+      <h1>Category: {category}</h1>
+      <p>Path: {slug?.join(' / ')}</p>
+    </div>
+  )
+}`}
+                    filename="app/products/[category]/[...slug]/page.tsx"
+                  />
+                </motion.section>
+
+                {/* Optional Catch-All Routes */}
+                <motion.section id="optional-catch-all" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Optional Catch-All Routes</h2>
+                  <p className="text-slate-300 mb-4">
+                    Use <code className="text-cyan-400">[[...name]]</code> to make the catch-all optional. The route will match both the parent path and any nested paths.
+                  </p>
+                  <CodeBlock 
+                    code={`src/app/
+├── shop/
+│   └── [[...slug]]/
+│       └── page.tsx       → /shop
+│                           → /shop/clothing
+│                           → /shop/clothing/shirts
+└── docs/
+    └── [[...path]]/
+        └── page.tsx       → /docs
+                            → /docs/getting-started
+                            → /docs/api/reference`}
                   />
                   <CodeBlock 
                     code={`// src/app/shop/[[...slug]]/page.tsx
@@ -285,64 +279,44 @@ export default function ShopPage() {
                   />
                 </motion.section>
 
-                {/* Dynamic Segments in Layouts */}
-                <motion.section id="dynamic-layouts" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="scroll-mt-24">
-                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Dynamic Segments in Layouts</h2>
+                {/* File-Based Catch-All Routes */}
+                <motion.section id="file-based-catch-all" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">File-Based Catch-All Routes</h2>
                   <p className="text-slate-300 mb-4">
-                    Layouts can also access dynamic parameters using <code className="text-cyan-400">useParams()</code>, which is auto-imported:
+                    Catch-all routes can also be defined as flat files without folders:
                   </p>
                   <CodeBlock 
-                    code={`// src/app/blog/[slug]/layout.tsx
-export default function BlogLayout() {
+                    code={`src/app/
+├── docs/
+│   └── [...slug].tsx      → /docs/getting-started
+│                           → /docs/api/reference
+├── products/
+│   └── [...path].tsx      → /products/electronics/phones
+│                           → /products/clothing/men
+└── blog/
+    └── [...slug].tsx      → /blog/2024/01/hello-world`}
+                  />
+                  <CodeBlock 
+                    code={`// src/app/blog/[...slug].tsx
+export default function BlogArchive() {
   const { slug } = useParams()
   
   return (
     <div>
-      <header>Post: {slug}</header>
-      <main><Outlet /></main>
+      <h1>Blog Archive</h1>
+      <p>Path: {slug?.join(' / ')}</p>
     </div>
   )
 }`}
-                    filename="app/blog/[slug]/layout.tsx"
+                    filename="app/blog/[...slug].tsx"
                   />
-                  <p className="text-slate-300 mt-4">
-                    This is useful for displaying contextual information in headers, sidebars, or breadcrumbs.
-                  </p>
-                </motion.section>
-
-                {/* Flat File Dynamic Routes */}
-                <motion.section id="flat-file-dynamic" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="scroll-mt-24">
-                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Flat File Dynamic Routes</h2>
-                  <p className="text-slate-300 mb-4">
-                    Dynamic routes can also be created as flat files without folders:
-                  </p>
-                  <CodeBlock 
-                    code={`src/app/
-├── blog/
-│   └── [slug].tsx        → /blog/hello-world
-├── products/
-│   └── [id].tsx          → /products/123
-└── users/
-    └── [userId].tsx      → /users/john`}
-                  />
-                  <CodeBlock 
-                    code={`// src/app/blog/[slug].tsx
-export default function BlogPost() {
-  const { slug } = useParams()
-  return <h1>Post: {slug}</h1>
-}`}
-                    filename="app/blog/[slug].tsx"
-                  />
-                  <p className="text-slate-300 mt-4">
-                    Flat file dynamic routes are especially useful for simpler pages where a folder structure would be unnecessary overhead.
-                  </p>
                 </motion.section>
 
                 {/* Route Priority */}
-                <motion.section id="route-priority" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="scroll-mt-24">
+                <motion.section id="route-priority" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="scroll-mt-24">
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Route Priority</h2>
                   <p className="text-slate-300 mb-4">
-                    When multiple routes could match a URL, Bini.js resolves them in this order:
+                    Catch-all routes have lower priority than static routes and dynamic single segments. The router resolves matches in this order:
                   </p>
                   <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4 mb-6">
                     <ol className="list-decimal list-inside space-y-2 text-slate-300">
@@ -360,28 +334,41 @@ export default function BlogPost() {
 ├── featured/
 │   └── page.tsx           → /blog/featured (static - highest priority)
 ├── [slug]/
-│   └── page.tsx           → /blog/anything-else (dynamic)
+│   └── page.tsx           → /blog/hello-world (dynamic)
 └── [...slug]/
-    └── page.tsx           → /blog/a/b/c (catch-all)`}
+    └── page.tsx           → /blog/2024/01/hello-world (catch-all)`}
                   />
                   <Table 
                     headers={['URL', 'Matched Route']}
                     rows={[
                       ['/blog/featured', 'featured/page.tsx (static)'],
                       ['/blog/hello-world', '[slug]/page.tsx (dynamic)'],
-                      ['/blog/a/b/c', '[...slug]/page.tsx (catch-all)'],
+                      ['/blog/2024/01/hello-world', '[...slug]/page.tsx (catch-all)'],
                     ]}
                   />
-                  <p className="text-slate-300 mt-4">
-                    This ensures predictable routing behavior and prevents conflicts between different route types.
+                </motion.section>
+
+                {/* Use Cases */}
+                <motion.section id="use-cases" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="scroll-mt-24">
+                  <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Use Cases</h2>
+                  <p className="text-slate-300 mb-4">
+                    Catch-all routes are ideal for:
                   </p>
+                  <ul className="space-y-2 text-slate-300 mb-4 list-disc list-inside">
+                    <li><strong className="text-white">Documentation pages</strong> — Multi-level documentation with variable depth</li>
+                    <li><strong className="text-white">E-commerce categories</strong> — Nested category structures like <code className="text-cyan-400">/products/electronics/phones/iphone</code></li>
+                    <li><strong className="text-white">Blog archives</strong> — Date-based archives like <code className="text-cyan-400">/blog/2024/01/hello-world</code></li>
+                    <li><strong className="text-white">CMS content</strong> — Content pages with flexible URL structures</li>
+                    <li><strong className="text-white">Multi-language sites</strong> — Language prefixes with variable paths like <code className="text-cyan-400">/en/docs/getting-started</code></li>
+                    <li><strong className="text-white">API versioning</strong> — API routes with version segments like <code className="text-cyan-400">/api/v1/users/123</code></li>
+                  </ul>
                 </motion.section>
 
                 {/* Complete Example */}
                 <motion.section id="complete-example" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="scroll-mt-24">
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Complete Example</h2>
                   <p className="text-slate-300 mb-4">
-                    Here is a comprehensive example showing all dynamic route patterns:
+                    Here is a comprehensive example showing all catch-all route patterns:
                   </p>
                   <CodeBlock 
                     code={`src/app/
@@ -389,40 +376,42 @@ export default function BlogPost() {
 │   ├── featured/
 │   │   └── page.tsx           → /blog/featured (static)
 │   ├── [slug]/
-│   │   ├── layout.tsx         ← Layout for single post
 │   │   └── page.tsx           → /blog/:slug (dynamic)
-│   ├── [category]/
-│   │   └── [slug]/
-│   │       └── page.tsx       → /blog/:category/:slug (multiple dynamic)
 │   └── [...slug]/
-│       └── page.tsx           → /blog/a/b/c (catch-all)
+│       └── page.tsx           → /blog/2024/01/hello-world (catch-all)
 ├── docs/
 │   └── [[...slug]]/
 │       ├── layout.tsx         ← Layout for docs
 │       └── page.tsx           → /docs (optional catch-all)
 │                               → /docs/getting-started
-└── products/
-    ├── page.tsx               → /products
-    ├── [id].tsx               → /products/:id (flat file)
-    └── categories/
-        └── [name]/
-            └── page.tsx       → /products/categories/:name`}
+├── products/
+│   └── [category]/
+│       └── [...slug]/
+│           └── page.tsx       → /products/electronics/phones/iphone
+├── shop/
+│   └── [[...slug]]/
+│       └── page.tsx           → /shop (optional catch-all)
+│                               → /shop/clothing
+│                               → /shop/clothing/shirts
+└── api/
+    └── v1/
+        └── [...path].ts       → /api/v1/users/123 (flat file catch-all)`}
                   />
                 </motion.section>
 
                 {/* Previous / Next Navigation */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="flex items-center justify-between pt-8 mt-8 border-t border-slate-800">
-                  <Link to="/docs/file-based-routing" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+                  <Link to="/docs/dynamic-routes" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                     <div>
                       <div className="text-xs text-slate-500">Previous</div>
-                      <div className="text-sm font-medium">File-Based Routing</div>
+                      <div className="text-sm font-medium">Dynamic Routes</div>
                     </div>
                   </Link>
-                  <Link to="/docs/catch-all-routes" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
+                  <Link to="/docs/mdx-markdown" className="group flex items-center gap-2 text-right text-slate-400 hover:text-white transition-colors">
                     <div>
                       <div className="text-xs text-slate-500">Next</div>
-                      <div className="text-sm font-medium">Catch-All Routes</div>
+                      <div className="text-sm font-medium">MDX and Markdown</div>
                     </div>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>

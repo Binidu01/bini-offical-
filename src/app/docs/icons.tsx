@@ -3,8 +3,11 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft,
-  ArrowRight,
+  AlertTriangle,
+  Info,
+  Lightbulb,
   CheckCircle,
+  ArrowRight,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/Layout'
@@ -35,6 +38,7 @@ const TOC_ITEMS: TocItem[] = [
   { id: 'static-export', label: 'Static Export' },
   { id: 'platform-comparison', label: 'Platform Comparison' },
   { id: 'environment-variables', label: 'Environment Variables' },
+  { id: 'best-practices', label: 'Best Practices' },
 ]
 
 const PAGE_TITLE = 'Deploying'
@@ -206,6 +210,7 @@ export default function DeployingPage() {
                 {/* Using bini-deploy */}
                 <motion.section id="using-bini-deploy" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="scroll-mt-24">
                   <h2 className="text-2xl font-bold text-white mb-4 border-b border-slate-800 pb-2 flex items-center gap-2">
+                    <span className="text-amber-400">⚡</span>
                     One Command to Deploy Anywhere
                   </h2>
                   <p className="text-slate-300 mb-4">

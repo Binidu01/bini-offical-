@@ -7,17 +7,12 @@ import {
   Layers,
   Boxes,
   Server,
-  Zap,
   Route as RouteIcon,
   Import as ImportIcon,
   Smartphone,
   Gauge,
   ShieldCheck,
   Globe,
-  Eye,
-  Download,
-  Settings,
-  Terminal,
   Heart,
 } from 'lucide-react'
 import React, { useState } from 'react'
