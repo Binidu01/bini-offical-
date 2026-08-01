@@ -10,19 +10,20 @@
   <p>
     <a href="https://www.npmjs.com/package/create-bini-app"><img src="https://img.shields.io/npm/v/create-bini-app?color=00cfff&labelColor=040a16&label=create-bini-app" alt="create-bini-app" /></a>
     <a href="https://www.npmjs.com/package/bini-router"><img src="https://img.shields.io/npm/v/bini-router?color=0077ff&labelColor=040a16&label=bini-router" alt="bini-router" /></a>
+    <a href="https://www.npmjs.com/package/bini-deploy"><img src="https://img.shields.io/npm/v/bini-deploy?color=34d399&labelColor=040a16&label=bini-deploy" alt="bini-deploy" /></a>
     <a href="https://www.npmjs.com/package/bini-native"><img src="https://img.shields.io/npm/v/bini-native?color=34d399&labelColor=040a16&label=bini-native" alt="bini-native" /></a>
     <a href="https://www.npmjs.com/package/bini-server"><img src="https://img.shields.io/npm/v/bini-server?color=00cfff&labelColor=040a16&label=bini-server" alt="bini-server" /></a>
     <a href="https://www.npmjs.com/package/bini-overlay"><img src="https://img.shields.io/npm/v/bini-overlay?color=0077ff&labelColor=040a16&label=bini-overlay" alt="bini-overlay" /></a>
     <a href="https://www.npmjs.com/package/bini-export"><img src="https://img.shields.io/npm/v/bini-export?color=00cfff&labelColor=040a16&label=bini-export" alt="bini-export" /></a>
     <a href="https://www.npmjs.com/package/bini-env"><img src="https://img.shields.io/npm/v/bini-env?color=0077ff&labelColor=040a16&label=bini-env" alt="bini-env" /></a>
-    <a href="https://github.com/Binidu01/bini-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-00cfff?labelColor=040a16" alt="MIT license" /></a>
+    <a href="https://github.com/Binidu01/create-bini-app/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-00cfff?labelColor=040a16" alt="MIT license" /></a>
   </p>
 
   <p>
     <a href="https://bini.js.org">Website</a> ·
     <a href="https://bini.js.org/docs">Docs</a> ·
     <a href="https://github.com/Binidu01/bini-examples">Examples</a> ·
-    <a href="https://github.com/Binidu01/bini-cli/issues">Issues</a>
+    <a href="https://github.com/Binidu01/create-bini-app/issues">Issues</a>
   </p>
 </div>
 
@@ -30,7 +31,7 @@
 
 ## What is Bini.js?
 
-Bini.js is a React framework for building modern applications that run natively across web, desktop, and mobile — all from a single codebase. It gives you file-based routing, [Hono](https://hono.dev)-powered API routes, per-route metadata, a zero-dependency production server, static export, native plugin wiring, and a polished dev experience all wired together and ready to deploy anywhere.
+Bini.js is a React framework for building modern applications that run natively across web, desktop, and mobile — all from a single codebase. It gives you file-based routing, [Hono](https://hono.dev)-powered API routes, per-route metadata, a zero-dependency production server, static export, native plugin wiring, one-command deployment, and a polished dev experience all wired together and ready to deploy anywhere.
 
 ```bash
 src/app/
@@ -112,7 +113,7 @@ my-app/
 ├── public/
 │   ├── favicon.ico
 │   ├── apple-touch-icon.png
-│   ├── logo.png              # Source icon for native app icons
+│   ├── logo.png               # Source icon for native app icons
 │   └── og-image.png
 ├── vite.config.ts
 ├── package.json
@@ -186,28 +187,37 @@ Bini.js automatically wires native plugins for desktop and mobile platforms. `bi
 - **Android/iOS manifests** — Updates platform manifests automatically
 - **Zero manual edits** — No need to touch Rust or native config files
 
+### One-Command Deployment
+
+`bini-deploy` is wired into every scaffold as `npm run deploy`. It scans your project, generates the right hosting config for your target, and pushes straight to GitHub — no YAML to write by hand.
+
 ---
 
 ## Deploy
 
-Set `platform` in `vite.config.ts` and run `vite build`. Bini.js generates the correct entry file for your target.
+Every scaffold ships with `bini-deploy`. Deploying is just:
 
-```ts
-// vite.config.ts
-import { biniroute } from 'bini-router'
-
-export default {
-  plugins: [react(), biniroute({ platform: 'netlify' })],
-}
+```bash
+npm run deploy
 ```
 
-| Platform     | Generated file                          |
-|--------------|-----------------------------------------|
-| `netlify`    | `netlify/edge-functions/api.ts`         |
-| `vercel`     | `api/index.ts`                          |
-| `cloudflare` | `worker.ts`                             |
-| `node`       | *(handled by bini-server)*              |
-| `deno`       | `server/index.ts`                       |
+This runs interactively — it prompts you to choose a platform (`web`, `windows`, `macos`, `linux`, `android`, `ios`) and, if you pick web, a hosting provider (`node`, `netlify`, `vercel`, `cloudflare`, `deno`). It generates the right config and entry file, commits, and pushes everything to your GitHub repository.
+
+For scripts and CI, skip the prompts with flags:
+
+```bash
+npx bini-deploy --platform web --hosting vercel --repo https://github.com/you/your-app --yes
+```
+
+| Hosting provider | Generated file(s) |
+|---|---|
+| `node` (default) | *none — `bini-server` reads `src/app/api/` directly at request time* |
+| `netlify` | `netlify.toml` + `netlify/edge-functions/api.ts` |
+| `vercel` | `vercel.json` + `api/index.ts` |
+| `cloudflare` | `wrangler.toml` + `worker.ts` |
+| `deno` | `server/index.ts` |
+
+Windows, macOS, Linux, Android, and iOS targets don't generate hosting config — there's nothing to host. `bini-deploy` just pushes the project to GitHub and prints the manual build/sign/submit steps for that platform.
 
 ---
 
@@ -219,9 +229,13 @@ Bini.js is built around a set of focused packages. Each one does one thing well.
 
 The official project scaffold CLI. Run `npx create-bini-app@latest` to get a full project with routing, API routes, and your choice of TypeScript or JavaScript, Tailwind or CSS Modules, and platform target — ready in seconds.
 
+### `bini-deploy` · [npm](https://www.npmjs.com/package/bini-deploy)
+
+Zero-config deployment for Bini.js projects — web, desktop, and mobile, all from one CLI. Scans `src/app/api/`, generates the right hosting config and entry file for your target platform, and commits and pushes everything to GitHub. Bundled into every scaffold as `npm run deploy`.
+
 ### `bini-router` · [npm](https://www.npmjs.com/package/bini-router)
 
-The core of Bini.js. Scans `src/app/` on every file change and regenerates the React Router tree instantly with HMR. Supports nested layouts, per-route metadata, auto-imports for React and React Router hooks, Hono-powered API routes, and built-in error boundaries. Reads `metadata` exports from layouts at build time and injects the right `<meta>` tags into `index.html`. Generates the correct deploy entry file for your target platform on every `vite build`.
+The core of Bini.js. Scans `src/app/` on every file change and regenerates the React Router tree instantly with HMR. Supports nested layouts, per-route metadata, MDX & Markdown pages, folder-scoped loading/error/404 boundaries, auto-imports for React and React Router hooks, and Hono-powered API routes. Reads `metadata` exports from layouts at build time and injects the right `<meta>` tags into `index.html`.
 
 ### `bini-native` · [npm](https://www.npmjs.com/package/bini-native)
 
@@ -229,7 +243,7 @@ Automatic Tauri plugin wiring for desktop and mobile. Detects the web APIs you c
 
 ### `bini-server` · [npm](https://www.npmjs.com/package/bini-server)
 
-A production server for bini-router apps (requires Node ≥ 20). Serves your `dist/` folder as static files, handles `/api/*` from your `src/app/api/` handlers, and falls back to `index.html` for SPA routing. Includes ETag support, configurable timeouts, body size limits, port auto-increment, graceful shutdown, and interactive keyboard shortcuts.
+A production server for bini-router apps (requires Node ≥ 20.19). Serves your `dist/` folder as static files, handles `/api/*` from your `src/app/api/` handlers, and falls back to `index.html` for SPA routing. Includes ETag support, configurable timeouts, body size limits, port auto-increment, graceful shutdown, and interactive keyboard shortcuts.
 
 ```bash
 # package.json
@@ -249,17 +263,17 @@ Generates a fully static SPA export. Pre-renders every static route to its own `
 
 ```ts
 import { biniExport } from 'bini-export'
-// add to plugins in vite.config.ts alongside biniroute()
+// add to plugins in vite.config.ts alongside ...biniroute()
 ```
 
 ### `bini-env` · [npm](https://www.npmjs.com/package/bini-env)
 
-A universal environment variable system + Vite plugin. Loads `.env` files automatically in priority order and prints which ones are active on every dev/preview start. `getEnv()` and `requireEnv()` are auto-imported and work in Node.js, Bun, Deno, and edge runtimes.
+A Hono-native environment variable system + Vite plugin. Loads `.env` files automatically in priority order and prints which ones are active on every dev/preview start. `getEnv(c, key)` and `requireEnv(c, key)` are auto-imported and read directly from the Hono request context, so they resolve correctly whether you're on Node.js, Bun, Deno, Vercel Edge, Netlify Edge, or Cloudflare Workers.
 
 ```bash
 # .env
 BINI_PUBLIC_API_URL=https://api.example.com   # client-side: import.meta.env.BINI_*
-SMTP_USER=user@smtp.example.com               # server-side: requireEnv() in API routes
+SMTP_USER=user@smtp.example.com               # server-side: requireEnv(c, key) in API routes
 ```
 
 ```ts
@@ -284,12 +298,13 @@ app.get('/hello', (c) => {
 | Package | Description |
 |---|---|
 | [`create-bini-app`](https://www.npmjs.com/package/create-bini-app) | Project scaffold CLI with platform targeting |
-| [`bini-router`](https://www.npmjs.com/package/bini-router) | File routing, API routes, metadata, deploy entries |
+| [`bini-deploy`](https://www.npmjs.com/package/bini-deploy) | Zero-config deployment — hosting config generation + push to GitHub |
+| [`bini-router`](https://www.npmjs.com/package/bini-router) | File routing, layouts, MDX pages, API routes, metadata |
 | [`bini-native`](https://www.npmjs.com/package/bini-native) | Automatic Tauri plugin wiring for desktop and mobile |
-| [`bini-server`](https://www.npmjs.com/package/bini-server) | Production Node.js server — static files, API routes, SPA fallback (Node ≥ 20) |
+| [`bini-server`](https://www.npmjs.com/package/bini-server) | Production Node.js server — static files, API routes, SPA fallback (Node ≥ 20.19) |
 | [`bini-overlay`](https://www.npmjs.com/package/bini-overlay) | Animated dev badge + source-mapped error overlay |
 | [`bini-export`](https://www.npmjs.com/package/bini-export) | Static SPA export for GitHub Pages, Netlify, S3 |
-| [`bini-env`](https://www.npmjs.com/package/bini-env) | Universal env vars + Vite plugin with startup banner |
+| [`bini-env`](https://www.npmjs.com/package/bini-env) | Hono-native env vars + Vite plugin with startup banner |
 
 ---
 
@@ -298,13 +313,19 @@ app.get('/hello', (c) => {
 ```ts
 // vite.config.ts
 biniroute({
-  platform  : 'netlify',     // 'netlify' | 'vercel' | 'cloudflare' | 'deno' | 'node'
-  appDir    : 'src/app',     // default — scanned for page.tsx / layout.tsx
-  apiDir    : 'src/app/api', // default — scanned for API handlers
-  cors      : true,          // enable CORS on dev/preview API routes
-  strictMode: true,          // throw on route conflicts
-  basePath  : '',            // subpath prefix, e.g. '/app'
+  appDir    : 'src/app',      // default — scanned for page.tsx / layout.tsx
+  apiDir    : 'src/app/api',  // default — scanned for API handlers
+  cors      : true,           // enable CORS on dev/preview API routes
+  strictMode: true,           // throw on route conflicts
+  basePath  : '',             // subpath prefix, e.g. '/app'
+  mdx       : {},             // passed through to the bundled MDX compiler
 })
+```
+
+`biniroute()` returns an array of plugins (the router plugin plus the bundled MDX compiler), so spread it into `plugins`:
+
+```ts
+plugins: [react(), biniEnv(), ...biniroute()],
 ```
 
 See the [full config reference](https://bini.js.org/plugins) for all options.
