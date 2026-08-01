@@ -25,7 +25,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'CORS'
 const PAGE_URL = 'https://bini.js.org/docs/api-cors'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/api-cors/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/api-cors.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

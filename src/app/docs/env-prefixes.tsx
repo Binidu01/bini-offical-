@@ -27,7 +27,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Prefixes & Client Exposure'
 const PAGE_URL = 'https://bini.js.org/docs/env-prefixes'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/env-prefixes/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/env-prefixes.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

@@ -25,8 +25,8 @@ const TOC_ITEMS: TocItem[] = [
 ]
 
 const PAGE_TITLE = 'Loading UI'
-const PAGE_URL = 'https://bini.js.org/docs/loading'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/loading/page.tsx'
+const PAGE_URL = 'https://bini.js.org/docs/load'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/load.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

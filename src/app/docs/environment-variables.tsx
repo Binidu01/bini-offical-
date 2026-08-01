@@ -28,7 +28,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Environment Variables'
 const PAGE_URL = 'https://bini.js.org/docs/environment-variables'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/environment-variables/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/environment-variables.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

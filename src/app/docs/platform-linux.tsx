@@ -60,7 +60,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Linux'
 const PAGE_URL = 'https://bini.js.org/docs/platform-linux'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/platform-linux/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/platform-linux.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

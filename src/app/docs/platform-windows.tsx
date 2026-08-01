@@ -61,7 +61,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Windows'
 const PAGE_URL = 'https://bini.js.org/docs/platform-windows'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/platform-windows/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/platform-windows.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

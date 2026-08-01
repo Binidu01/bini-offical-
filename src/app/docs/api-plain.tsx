@@ -32,7 +32,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Plain Function Handlers'
 const PAGE_URL = 'https://bini.js.org/docs/api-plain'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/api-plain/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/api-plain.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

@@ -28,7 +28,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'CSS Modules'
 const PAGE_URL = 'https://bini.js.org/docs/css-modules'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/css-modules/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/css-modules.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

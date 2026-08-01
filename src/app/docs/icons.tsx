@@ -43,7 +43,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Deploying'
 const PAGE_URL = 'https://bini.js.org/docs/deploying'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/deploying/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/icons.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Simple Icon component

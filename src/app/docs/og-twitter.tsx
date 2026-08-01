@@ -24,7 +24,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Open Graph & Twitter Cards'
 const PAGE_URL = 'https://bini.js.org/docs/og-twitter'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/og-twitter/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/og-twitter.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

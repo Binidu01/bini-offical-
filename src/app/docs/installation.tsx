@@ -38,7 +38,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Installation'
 const PAGE_URL = 'https://bini.js.org/docs/installation'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/installation/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/installation.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Dynamic Terminal Component

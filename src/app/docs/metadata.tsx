@@ -26,7 +26,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Metadata'
 const PAGE_URL = 'https://bini.js.org/docs/metadata'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/metadata/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/metadata.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

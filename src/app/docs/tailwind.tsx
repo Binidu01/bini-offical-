@@ -27,7 +27,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Tailwind CSS'
 const PAGE_URL = 'https://bini.js.org/docs/tailwind'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/tailwind/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/tailwind.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

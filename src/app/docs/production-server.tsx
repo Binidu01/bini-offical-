@@ -37,7 +37,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Production Server'
 const PAGE_URL = 'https://bini.js.org/docs/production-server'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/production-server/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/production-server.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Simple Icon component

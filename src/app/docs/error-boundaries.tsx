@@ -26,7 +26,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Error Boundaries'
 const PAGE_URL = 'https://bini.js.org/docs/error-boundaries'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/error-boundaries/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/error-boundaries.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

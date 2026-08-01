@@ -40,7 +40,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Android'
 const PAGE_URL = 'https://bini.js.org/docs/platform-android'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/platform-android/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/platform-android.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

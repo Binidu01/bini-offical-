@@ -28,7 +28,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'MDX and Markdown'
 const PAGE_URL = 'https://bini.js.org/docs/mdx-markdown'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/mdx-markdown/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/mdx-markdown.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

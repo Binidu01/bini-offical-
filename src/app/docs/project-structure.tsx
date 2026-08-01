@@ -36,7 +36,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Project Structure'
 const PAGE_URL = 'https://bini.js.org/docs/project-structure'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/project-structure/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/project-structure.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

@@ -63,7 +63,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'iOS'
 const PAGE_URL = 'https://bini.js.org/docs/platform-ios'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/platform-ios/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/platform-ios.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

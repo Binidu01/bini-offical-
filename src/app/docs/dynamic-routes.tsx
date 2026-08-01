@@ -27,7 +27,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Dynamic Routes'
 const PAGE_URL = 'https://bini.js.org/docs/dynamic-routes'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/dynamic-routes/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/dynamic-routes.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

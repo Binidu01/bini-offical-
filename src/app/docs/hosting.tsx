@@ -37,7 +37,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Hosting Providers'
 const PAGE_URL = 'https://bini.js.org/docs/hosting'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/hosting/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/hosting.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Simple Icon component

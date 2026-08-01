@@ -24,7 +24,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Using Environment Variables in API Routes'
 const PAGE_URL = 'https://bini.js.org/docs/env-api'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/env-api/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/env-api.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

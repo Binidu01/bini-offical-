@@ -27,7 +27,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Linking and Navigating'
 const PAGE_URL = 'https://bini.js.org/docs/linking-and-navigating'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/linking-and-navigating/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/linking-and-navigating.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

@@ -29,7 +29,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'API Routes Overview'
 const PAGE_URL = 'https://bini.js.org/docs/api-routes'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/api-routes/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/api-routes.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

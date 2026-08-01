@@ -25,7 +25,7 @@ const TOC_ITEMS: TocItem[] = [
 
 const PAGE_TITLE = 'Layouts and Pages'
 const PAGE_URL = 'https://bini.js.org/docs/layouts-and-pages'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/layouts-and-pages/page.tsx'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/layouts-and-pages.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar

@@ -24,8 +24,8 @@ const TOC_ITEMS: TocItem[] = [
 ]
 
 const PAGE_TITLE = '404 Page'
-const PAGE_URL = 'https://bini.js.org/docs/not-found'
-const EDIT_URL = 'https://github.com/Binidu01/bini-official/edit/main/src/pages/docs/not-found/page.tsx'
+const PAGE_URL = 'https://bini.js.org/docs/notfound'
+const EDIT_URL = 'https://github.com/Binidu01/bini-offical/edit/main/src/app/docs/notfound.tsx'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Code Block Component with horizontal scrollbar
