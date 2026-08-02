@@ -34,11 +34,12 @@
     "@vitejs/plugin-react": "latest",
     "bini-deploy": "latest",
     "bini-env": "latest",
-    "bini-export": "1.0.3",
+    "bini-export": "^1.0.4",
     "oxfmt": "latest",
     "oxlint": "latest",
     "tailwindcss": "latest",
     "typescript": "^6.0.0",
-    "vite": "latest"
+    "vite": "latest",
+    "vite-react-ssg": "^0.9.2"
   }
 }
