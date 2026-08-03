@@ -16,14 +16,14 @@
     <a href="https://www.npmjs.com/package/bini-overlay"><img src="https://img.shields.io/npm/v/bini-overlay?color=0077ff&labelColor=040a16&label=bini-overlay" alt="bini-overlay" /></a>
     <a href="https://www.npmjs.com/package/bini-export"><img src="https://img.shields.io/npm/v/bini-export?color=00cfff&labelColor=040a16&label=bini-export" alt="bini-export" /></a>
     <a href="https://www.npmjs.com/package/bini-env"><img src="https://img.shields.io/npm/v/bini-env?color=0077ff&labelColor=040a16&label=bini-env" alt="bini-env" /></a>
-    <a href="https://github.com/Binidu01/create-bini-app/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-00cfff?labelColor=040a16" alt="MIT license" /></a>
+    <a href="https://github.com/Binidu01/bini-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-00cfff?labelColor=040a16" alt="MIT license" /></a>
   </p>
 
   <p>
     <a href="https://bini.js.org">Website</a> ·
     <a href="https://bini.js.org/docs">Docs</a> ·
     <a href="https://github.com/Binidu01/bini-examples">Examples</a> ·
-    <a href="https://github.com/Binidu01/create-bini-app/issues">Issues</a>
+    <a href="https://github.com/Binidu01/bini-cli/issues">Issues</a>
   </p>
 </div>
 
